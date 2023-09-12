@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NT_GreenSecure.App">
+    <!--
+        Define global resources and styles here, that apply to all pages in your app.
+    -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Define color -->
+            <Color x:Key="Primary">#3C8054</Color>
+            <Color x:Key="LightPrimary">#D5D8DC</Color>
+            <Color x:Key="MainBackGround">#F3F5F7</Color>
+            <Color x:Key="TextColor">#2D3D52</Color>
+            <Color x:Key="TextLightColor">#CBD0D6</Color>
+            <Color x:Key="White">#FFFFFF</Color>
+
+            <!--#region  Set robot as default font for elements with text -->
+
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="Roboto-Regular.ttf#Roboto" />
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="Roboto-Regular.ttf#Roboto" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="FontFamily" Value="Roboto-Regular.ttf#Roboto" />
+            </Style>
+
+            <Style TargetType="SearchBar">
+                <Setter Property="FontFamily" Value="Roboto-Regular.ttf#Roboto" />
+            </Style>
+
+            <!-- #endregion -->
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
