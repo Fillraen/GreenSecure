@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage    
+    xmlns="http://xamarin.com/schemas/2014/forms"  
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+    xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"  
+    xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"  
+    xmlns:vm="clr-namespace:NT_GreenSecure.ViewModels.Popup"
+    x:Class="NT_GreenSecure.Views.Popup.AuthPopup">
+
+    <pages:PopupPage.Animation>
+        <animations:ScaleAnimation   
+            PositionIn="Bottom"  
+            PositionOut="Bottom"  
+            DurationIn="400"  
+            DurationOut="300"  
+            EasingIn="SinOut"  
+            EasingOut="SinIn"  
+            HasBackgroundAnimation="True"/>
+    </pages:PopupPage.Animation>
+
+    <StackLayout VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand" Spacing="0">
+
+        <!-- Frame pour le titre -->
+        <Frame CornerRadius="20" BorderColor="Transparent" HorizontalOptions="FillAndExpand" HeightRequest="50" BackgroundColor="Gray" Margin="0">
+            <Label Text="Login" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+        </Frame>
+
+        <!-- Frame pour le formulaire -->
+        <Frame CornerRadius="0"  HorizontalOptions="FillAndExpand" BorderColor="Transparent" BackgroundColor="White" Margin="0">
+            <StackLayout>
+                <Frame BorderColor="{StaticResource Primary}" CornerRadius="50"  Margin="10,10">
+                    <Entry Placeholder="Champ 1" TextColor="{StaticResource TextColor}" FontSize="16" Text="{Binding Email}"/>
+                </Frame>
+                <Frame BorderColor="{StaticResource Primary}" CornerRadius="50"  Margin="10,10">
+                    <Entry Placeholder="Champ 1" Text="{Binding Password}" TextColor="{StaticResource TextColor}" FontSize="16" IsPassword="True"/>
+                </Frame>
+
+                <Button Text="Yes, Login"  Command="{Binding LoginCommand}"></Button>
+                <Button Text="Sign UP !" Clicked="Button_Clicked"></Button>
+                
+            </StackLayout>
+
+        </Frame>
+    </StackLayout>
+</pages:PopupPage>

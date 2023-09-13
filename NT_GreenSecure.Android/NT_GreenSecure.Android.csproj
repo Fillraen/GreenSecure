@@ -181,4 +181,9 @@
     <AndroidResource Include="Resources\drawable\icon_vault_green.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties XamarinHotReloadGenericExceptionInfoBarNT_GreenSecureAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionNT_GreenSecureAndroidHideInfoBar="True" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
