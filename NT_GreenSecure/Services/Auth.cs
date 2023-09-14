@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NT_GreenSecure.Models;
 using NT_GreenSecure.Services;
+using Xamarin.Essentials;
 
 namespace NT_GreenSecure
 {
@@ -34,6 +35,7 @@ namespace NT_GreenSecure
             {
                 user.LastLoginDate = DateTime.UtcNow;
                 user.FailedLoginAttempts = 0;
+                Preferences.Set("IdUser", user.UserId);
                 return true;
             }
             else

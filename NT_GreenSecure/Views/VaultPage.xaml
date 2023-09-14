@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NT_GreenSecure.Views.VaultPage"
+             xmlns:vm="clr-namespace:NT_GreenSecure.ViewModels"
+             xmlns:model="clr-namespace:NT_GreenSecure.Models"
+
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="#F3F5F7"
+             >
+    <ContentPage.BindingContext>
+        <vm:VaultViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0">
+                <Label>Vault</Label>
+                <SearchBar x:Name="SearchBar"/>
+            </StackLayout>
+
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Credentials}" SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10" BackgroundColor="White" Margin="10" x:DataType="model:Credentials">
+                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large" TextColor="Black" />
+                            <Label Text="{Binding EmailAddress}" TextColor="Black" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

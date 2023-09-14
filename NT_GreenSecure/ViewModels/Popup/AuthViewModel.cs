@@ -38,7 +38,7 @@ namespace NT_GreenSecure.ViewModels.Popup
                 // Demander à fermer le popup
                 RequestClosePopup?.Invoke();
 
-                await Shell.Current.GoToAsync($"//{nameof(AboutPage)}");
+                await Shell.Current.GoToAsync($"//{nameof(VaultPage)}");
             }
             else
             {

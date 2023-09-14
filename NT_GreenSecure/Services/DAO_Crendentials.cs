@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using NT_GreenSecure.Models;
+using System.Reflection;
+using Xamarin.Essentials;
+using System.Linq;
 
 namespace NT_GreenSecure.Services
 {
@@ -15,11 +18,17 @@ namespace NT_GreenSecure.Services
 
         public async Task<List<Credentials>> GetAllCredentialsAsync()
         {
-            using (StreamReader r = new StreamReader("credentials.json"))
+
+            var assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
+
+            Stream stream = assembly.GetManifestResourceStream("NT_GreenSecure.CustomData.credentials.json");
+
+            using (StreamReader reader = new StreamReader(stream))
             {
-                string json = await r.ReadToEndAsync();
+                string json = await reader.ReadToEndAsync();
                 List<Credentials> credentials = JsonConvert.DeserializeObject<List<Credentials>>(json);
-                return credentials;
+                int IdUser = Preferences.Get("IdUser", int.MinValue);
+                return credentials.Where(c => c.IdUser == IdUser).ToList();
             }
         }
     }
