@@ -4,7 +4,6 @@
              xmlns:vm="clr-namespace:NT_GreenSecure.ViewModels"
              x:Class="NT_GreenSecure.Views.HomePage"
              Shell.NavBarIsVisible="False"
-             Shell.TabBarIsVisible="False"
              >
     <ContentPage.Content>
         <Grid>
@@ -13,7 +12,7 @@
    
             </Grid.RowDefinitions>
 
-            <Image Source="./home_bg.png" Grid.Row="1"></Image>
+            <Image Source="./home_bg.png" Grid.Row="0"></Image>
 
         </Grid>
     </ContentPage.Content>

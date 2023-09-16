@@ -26,7 +26,7 @@ namespace NT_GreenSecure.Views.Popup
         private async void Button_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopPopupAsync();
-            await Shell.Current.GoToAsync($"//{nameof(AboutPage)}");
+            await Shell.Current.GoToAsync($"//{nameof(VaultPage)}");
         }
     }
 }

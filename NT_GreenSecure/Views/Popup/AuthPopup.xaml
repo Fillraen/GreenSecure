@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
     xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"  
     xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"  
+    xmlns:controls="clr-namespace:NT_GreenSecure.Controls"
     xmlns:vm="clr-namespace:NT_GreenSecure.ViewModels.Popup"
     x:Class="NT_GreenSecure.Views.Popup.AuthPopup">
 
@@ -20,26 +21,34 @@
 
     <StackLayout VerticalOptions="EndAndExpand" HorizontalOptions="FillAndExpand" Spacing="0">
 
-        <!-- Frame pour le titre -->
-        <Frame CornerRadius="20" BorderColor="Transparent" HorizontalOptions="FillAndExpand" HeightRequest="50" BackgroundColor="Gray" Margin="0">
-            <Label Text="Login" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
-        </Frame>
+        <!-- Frame personnalisé pour le titre -->
+        <controls:CustomFrame Style="{StaticResource HeaderFramePopup}">
+            <Label Text="Login" Style="{StaticResource HeaderTitlePopup}"/>
+        </controls:CustomFrame>
 
         <!-- Frame pour le formulaire -->
-        <Frame CornerRadius="0"  HorizontalOptions="FillAndExpand" BorderColor="Transparent" BackgroundColor="White" Margin="0">
+        <Frame Style="{StaticResource FormPopup}">
             <StackLayout>
-                <Frame BorderColor="{StaticResource Primary}" CornerRadius="50"  Margin="10,10">
-                    <Entry Placeholder="Champ 1" TextColor="{StaticResource TextColor}" FontSize="16" Text="{Binding Email}"/>
+                <Frame Style="{StaticResource CredentialsBorderPopup}" Margin="0,20,0,10">
+                    <controls:CustomEntry 
+                        Image="icon_mail_green"
+                        Placeholder="Email" 
+                        Text="{Binding Email}" 
+                        Style="{StaticResource CredentialsEntryPopup}"/>
                 </Frame>
-                <Frame BorderColor="{StaticResource Primary}" CornerRadius="50"  Margin="10,10">
-                    <Entry Placeholder="Champ 1" Text="{Binding Password}" TextColor="{StaticResource TextColor}" FontSize="16" IsPassword="True"/>
+                <Frame Style="{StaticResource CredentialsBorderPopup}">
+                    <controls:CustomEntry 
+                        IsPasswordFlag="True"
+                        Image="icon_lock_green"
+                        Placeholder="Password" 
+                        Text="{Binding Password}" 
+                        Style="{StaticResource CredentialsEntryPopup}"/>
                 </Frame>
 
-                <Button Text="Yes, Login"  Command="{Binding LoginCommand}"></Button>
-                <Button Text="Sign UP !" Clicked="Button_Clicked"></Button>
-                
+                <Button Text="Yes, Login !"  Command="{Binding LoginCommand}" Style="{StaticResource ConfirmBtnPopup}"/>
+                <Button Text="Sign Up" Clicked="Button_Clicked" Style="{StaticResource CancelBtnPopup}"/>
+
             </StackLayout>
-
         </Frame>
     </StackLayout>
 </pages:PopupPage>

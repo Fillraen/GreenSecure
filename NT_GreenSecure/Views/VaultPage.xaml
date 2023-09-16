@@ -4,36 +4,78 @@
              x:Class="NT_GreenSecure.Views.VaultPage"
              xmlns:vm="clr-namespace:NT_GreenSecure.ViewModels"
              xmlns:model="clr-namespace:NT_GreenSecure.Models"
-
+             xmlns:controls="clr-namespace:NT_GreenSecure.Controls"
              Shell.NavBarIsVisible="False"
-             Shell.TabBarIsVisible="False"
              BackgroundColor="#F3F5F7"
              >
     <ContentPage.BindingContext>
         <vm:VaultViewModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.Content>
-        <Grid>
+    <ContentPage.Content >
+        <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackLayout Grid.Row="0">
-                <Label>Vault</Label>
-                <SearchBar x:Name="SearchBar"/>
+            <Image Grid.Row="0" Source="bg_top_vault" HorizontalOptions="FillAndExpand" Aspect="AspectFill" VerticalOptions="Start"/>
+            <StackLayout Grid.Row="0" Margin="20,0" >
+                <Label  Style="{StaticResource VaultTitle}" Text="Vault" />
+                <Frame Style="{StaticResource SearchBarFrameVault}">
+                    <controls:CustomEntry 
+                        Image="icon_search"
+                        Placeholder="Search password"
+                        Style="{StaticResource CredentialsEntryPopup}"/>
+                </Frame>
+                <StackLayout x:Name="SearchTagvault" Orientation="Horizontal" Margin="0,10,0,0">
+                    <Button Text="All" Style="{StaticResource SelectedTagVault}"/>
+                    <Button Text="Website" Style="{StaticResource UnselectedTagVault}"/>
+                    <Button Text="Software" Style="{StaticResource UnselectedTagVault}"/>
+
+                </StackLayout>
             </StackLayout>
 
-            <CollectionView Grid.Row="1" ItemsSource="{Binding Credentials}" SelectionMode="Single">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Padding="10" BackgroundColor="White" Margin="10" x:DataType="model:Credentials">
-                            <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="Large" TextColor="Black" />
-                            <Label Text="{Binding EmailAddress}" TextColor="Black" />
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+
+
+
+            <Frame Grid.Row="1" BackgroundColor="Transparent">
+                <CollectionView ItemsSource="{Binding Credentials}" SelectionMode="Single" >
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout BackgroundColor="Transparent">
+                                <Frame Style="{StaticResource CollectionItemPasswordVault}">
+                                    <Grid >
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Frame Grid.Column="0" Style="{StaticResource CollectionIconPasswordFrameVault}">
+                                            <Image Source="icon_netflix_password" Style="{StaticResource CollectionIconPasswordIconVault}"/>
+                                        </Frame>
+
+
+                                        <StackLayout Grid.Column="1" x:DataType="model:Credentials" Style="{StaticResource CollectionGroupDataVault}">
+                                            <Label Text="{Binding Name}" Style="{StaticResource CollectionMainDataVault}" />
+                                            <Label Text="{Binding EmailAddress}" Style="{StaticResource CollectionSecondDataVault}"/>
+                                        </StackLayout>
+
+                                        <StackLayout Grid.Column="2" Style="{StaticResource CollectionGroupActionBtn}" >
+                                            <Image Source="icon_copy" Style="{StaticResource CollectionFirstActionBtn}"/>
+                                            <Image Source="icon_delete_password" />
+                                        </StackLayout>
+                                        </Grid>
+                                    </Frame>
+                                </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Frame>
         </Grid>
     </ContentPage.Content>
 </ContentPage>
