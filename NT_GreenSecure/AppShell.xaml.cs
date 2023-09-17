@@ -13,6 +13,13 @@ namespace NT_GreenSecure
             InitializeComponent();
             Routing.RegisterRoute(nameof(ItemDetailPage), typeof(ItemDetailPage));
             Routing.RegisterRoute(nameof(NewItemPage), typeof(NewItemPage));
+
+            Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+            Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
+            Routing.RegisterRoute(nameof(VaultPage), typeof(VaultPage));
+            Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
+
+            
         }
 
     }

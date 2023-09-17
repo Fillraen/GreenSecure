@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:NT_GreenSecure.ViewModels"
              x:Class="NT_GreenSecure.Views.HomePage"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="True"
              >
     <ContentPage.Content>
         <Grid>
