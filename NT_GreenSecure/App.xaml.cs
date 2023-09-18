@@ -13,7 +13,7 @@ namespace NT_GreenSecure
         {
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
+            
             MainPage = new AppShell();
             /*
             string token = Preferences.Get("access_token", string.Empty);

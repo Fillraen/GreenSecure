@@ -4,6 +4,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Konscious.Security.Cryptography;
+using NT_GreenSecure.Services;
 
 namespace NT_GreenSecure.Models
 {
@@ -16,6 +17,11 @@ namespace NT_GreenSecure.Models
         public string Url { get; set; } // URL of the website or app
         public string Name { get; set; }
         private string EncryptedPassword { get; set; } // Encrypted Password
+        public string EncryptionKey { get; set; }
+        public string EncryptionIV { get; set; }
+
+        private AesEncryption _aesEncryption = new AesEncryption();
+
         public string Domain { get; set; } // Website or App the credential is for
         public string Category { get; set; } // E.g., Social Media, Banking
         public DateTime DateCreated { get; set; } // When was this credential created
@@ -23,25 +29,18 @@ namespace NT_GreenSecure.Models
 
         // Password Complexity and hashing
         public int Complexity { get; set; }
-        public string Salt { get; set; }
-
-        private Argon2Hasher _argon2Hasher = new Argon2Hasher();
-
 
         public void SetPassword(string plainTextPassword)
         {
-            byte[] salt;
-            EncryptedPassword = _argon2Hasher.HashPassword(plainTextPassword, out salt);
-            Salt = Convert.ToBase64String(salt);  // Conversion en string
+            EncryptedPassword = _aesEncryption.EncryptPassword(plainTextPassword, EncryptionKey, EncryptionIV);
             EvaluatePasswordComplexity(plainTextPassword);
         }
 
-        public bool ValidatePassword(string plainTextPassword)
+        public string GetActualPassword()
         {
-            byte[] saltBytes = Convert.FromBase64String(Salt);  // Conversion en byte[]
-            return _argon2Hasher.VerifyPassword(EncryptedPassword, plainTextPassword, saltBytes);
+            return _aesEncryption.DecryptPassword(EncryptedPassword, EncryptionKey, EncryptionIV);
         }
-
+        
         public int EvaluatePasswordComplexity(string password)
         {
             int complexityScore = 0;
@@ -68,19 +67,5 @@ namespace NT_GreenSecure.Models
 
             return complexityScore;
         }
-
-        public string GetActualPassword()
-        {
-            if (string.IsNullOrEmpty(EncryptedPassword) || string.IsNullOrEmpty(Salt))
-            {
-                return null;
-            }
-
-            // Supposons que votre _argon2Hasher a une méthode pour décrypter
-            byte[] saltBytes = Convert.FromBase64String(Salt);
-            return _argon2Hasher.DecryptPassword(EncryptedPassword, saltBytes);
-        }
-
-
     }
 }

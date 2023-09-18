@@ -1,4 +1,5 @@
 ﻿using Konscious.Security.Cryptography;
+using NT_GreenSecure.Services;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -12,17 +13,14 @@ namespace NT_GreenSecure.Models
         public string Username { get; set; }
         public string Email { get; set; }
         public string EncryptedPassword { get; set; }
+        public string EncryptionKey { get; set; }
+        public string EncryptionIV { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime LastLoginDate { get; set; }
         public bool IsLocked { get; set; }
         public int FailedLoginAttempts { get; set; }
 
         public List<Credentials> UserCredentials { get; set; }
-
-        public string Salt { get; set; }
-
-        private Argon2Hasher _argon2Hasher = new Argon2Hasher();
-
         
 
         public User()
@@ -31,19 +29,12 @@ namespace NT_GreenSecure.Models
             UserCredentials = new List<Credentials>();
             IsLocked = false;
             FailedLoginAttempts = 0;
-        }
 
-        public void SetPassword(string plainTextPassword)
-        {
-            byte[] salt;
-            EncryptedPassword = _argon2Hasher.HashPassword(plainTextPassword, out salt);
-            Salt = Convert.ToBase64String(salt);  // Conversion en string
-        }
-
-        public bool Authenticate(string plainTextPassword)
-        {
-            byte[] saltBytes = Convert.FromBase64String(Salt);  // Conversion en byte[]
-            return _argon2Hasher.VerifyPassword(EncryptedPassword, plainTextPassword, saltBytes);
+            using (Aes aes = Aes.Create())
+            {
+                EncryptionKey = Convert.ToBase64String(aes.Key);
+                EncryptionIV = Convert.ToBase64String(aes.IV);
+            }
         }
     }
 }

@@ -11,12 +11,12 @@ namespace NT_GreenSecure
     public class Auth
     {
         private DAO_Users _daoUser;
-        private Argon2Hasher _argon2Hasher;
+        private AesEncryption _aesEncryption;
 
         public Auth()
         {
             _daoUser = new DAO_Users();
-            _argon2Hasher = new Argon2Hasher();
+            _aesEncryption = new AesEncryption();
         }
 
         public async Task<bool> AuthenticateAsync(string email, string plainTextPassword)
@@ -29,7 +29,8 @@ namespace NT_GreenSecure
                 return false;
             }
 
-            bool isAuthenticated = _argon2Hasher.VerifyPassword(user.EncryptedPassword, plainTextPassword, Convert.FromBase64String(user.Salt));
+            // bool isAuthenticated = userCredentials.ValidatePassword(plainTextPassword);
+            bool isAuthenticated = _aesEncryption.VerifyPassword(user.EncryptedPassword, plainTextPassword, user.EncryptionKey, user.EncryptionIV);
 
             if (isAuthenticated)
             {

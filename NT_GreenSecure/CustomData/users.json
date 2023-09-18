@@ -1,24 +1,26 @@
 [
-  {
-    "UserId": 1,
-    "Username": "Alice",
-    "Email": "alice@example.com",
-    "EncryptedPassword": "3pXMoex/BuSpKoFw6IRTiw==",
-    "CreatedDate": "2023-09-14T00:00:00",
-    "LastLoginDate": "2023-09-14T12:00:00",
-    "IsLocked": false,
-    "FailedLoginAttempts": 0,
-    "Salt": "0WveyfK1hxLmvhsD"
-  },
-  {
-    "UserId": 2,
-    "Username": "Bob",
-    "Email": "bob@example.com",
-    "EncryptedPassword": "Psxfr3r6QoGB3ph4hTKXTw==",
-    "CreatedDate": "2023-09-15T00:00:00",
-    "LastLoginDate": "2023-09-15T12:00:00",
-    "IsLocked": false,
-    "FailedLoginAttempts": 0,
-    "Salt": "c0xwb79NHFoyf5wG"
-  }
+    {
+        "UserId": 1,
+        "Username": "Alice",
+        "Email": "alice@example.com",
+        "EncryptedPassword": "bCsADRzlkx30RE5hrpaNJg==",
+        "CreatedDate": "2023-09-14T00:00:00",
+        "LastLoginDate": "2023-09-14T12:00:00",
+        "IsLocked": false,
+        "FailedLoginAttempts": 0,
+        "EncryptionKey": "6Gesa/QQhXMaXRq45dHnjHX5XajFqhivLkDab96Cbjw=",
+        "EncryptionIV": "u+yWc2xkiRB65mU2xpBAIQ=="
+    },
+    {
+        "UserId": 2,
+        "Username": "Bob",
+        "Email": "bob@example.com",
+        "EncryptedPassword": "bCsADRzlkx30RE5hrpaNJg==",
+        "CreatedDate": "2023-09-15T00:00:00",
+        "LastLoginDate": "2023-09-15T12:00:00",
+        "IsLocked": false,
+        "FailedLoginAttempts": 0,
+        "EncryptionKey": "6Gesa/QQhXMaXRq45dHnjHX5XajFqhivLkDab96Cbjw=",
+        "EncryptionIV": "u+yWc2xkiRB65mU2xpBAIQ=="
+    }
 ]

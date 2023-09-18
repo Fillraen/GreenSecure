@@ -32,6 +32,7 @@ namespace NT_GreenSecure.ViewModels
             _daoCredentials = new DAO_Credentials();
 
             _daoCredentials.CredentialsChanged += async (sender, args) => await LoadCredentialsAsync();
+            LoadCredentialsAsync().Wait();
 
             CopyPasswordCommand = new Command<int>(CopyPassword);
             DeletePasswordCommand = new Command<int>(DeletePassword);
@@ -49,7 +50,8 @@ namespace NT_GreenSecure.ViewModels
             var credential = _credentials.FirstOrDefault(c => c.Id == id);
             if (credential != null)
             {
-                string actualPassword = credential.GetActualPassword();
+                // string actualPassword = credential.GetActualPassword();
+                string actualPassword = "test";
                 if (!string.IsNullOrEmpty(actualPassword))
                 {
                     Clipboard.SetTextAsync(actualPassword);

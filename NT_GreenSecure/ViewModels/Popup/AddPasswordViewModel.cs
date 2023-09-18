@@ -19,12 +19,12 @@ namespace NT_GreenSecure.ViewModels.Popup
 
         private void AddPassword()
         {
-            // Votre logique pour ajouter un mot de passe
+            // logique pour ajouter un mot de passe
         }
 
         private void Cancel()
         {
-            // Votre logique pour annuler
+            // logique pour annuler
         }
 
     }

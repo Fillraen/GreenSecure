@@ -31,8 +31,6 @@ namespace NT_GreenSecure.Services
                 List<Credentials> credentials = JsonConvert.DeserializeObject<List<Credentials>>(json);
                 int IdUser = Preferences.Get("IdUser", int.MinValue);
 
-                CredentialsChanged?.Invoke(this, EventArgs.Empty);
-
                 return credentials.Where(c => c.IdUser == IdUser).ToList();
             }
         }
@@ -50,8 +48,6 @@ namespace NT_GreenSecure.Services
             credentials.Add(newCredential);
             // Sauvegarder dans le fichier JSON
             SaveToFile(credentials);
-
-
 
             CredentialsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -93,8 +89,9 @@ namespace NT_GreenSecure.Services
         private void SaveToFile(List<Credentials> credentials)
         {
             string json = JsonConvert.SerializeObject(credentials);
-            // Écrire le JSON dans le fichier
-            // Votre logique pour écrire dans le fichier ici
+            
+            // Écrire ICI le JSON dans le fichier
+            
         }
 
 
