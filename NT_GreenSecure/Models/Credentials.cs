@@ -33,6 +33,7 @@ namespace NT_GreenSecure.Models
             byte[] salt;
             EncryptedPassword = _argon2Hasher.HashPassword(plainTextPassword, out salt);
             Salt = Convert.ToBase64String(salt);  // Conversion en string
+            EvaluatePasswordComplexity(plainTextPassword);
         }
 
         public bool ValidatePassword(string plainTextPassword)
@@ -67,6 +68,19 @@ namespace NT_GreenSecure.Models
 
             return complexityScore;
         }
+
+        public string GetActualPassword()
+        {
+            if (string.IsNullOrEmpty(EncryptedPassword) || string.IsNullOrEmpty(Salt))
+            {
+                return null;
+            }
+
+            // Supposons que votre _argon2Hasher a une méthode pour décrypter
+            byte[] saltBytes = Convert.FromBase64String(Salt);
+            return _argon2Hasher.DecryptPassword(EncryptedPassword, saltBytes);
+        }
+
 
     }
 }
