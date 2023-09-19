@@ -36,7 +36,12 @@ namespace NT_GreenSecure
             {
                 user.LastLoginDate = DateTime.UtcNow;
                 user.FailedLoginAttempts = 0;
+                
+                string token = GenerateAccessToken();
+
                 Preferences.Set("IdUser", user.UserId);
+                Preferences.Set("access_token", token);
+                Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(48));
                 return true;
             }
             else

@@ -31,10 +31,6 @@ namespace NT_GreenSecure.ViewModels.Popup
 
             if (isAuthenticated)
             {
-                string token = auth.GenerateAccessToken();
-                Preferences.Set("access_token", token);
-                Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(24));
-
                 // Demander à fermer le popup
                 RequestClosePopup?.Invoke();
 

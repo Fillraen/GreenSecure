@@ -15,36 +15,30 @@ namespace NT_GreenSecure
 
             
             MainPage = new AppShell();
-            /*
             string token = Preferences.Get("access_token", string.Empty);
             DateTime tokenExpiry;
-
+           
             bool isDateParsed = DateTime.TryParse(Preferences.Get("token_expiry", string.Empty), out tokenExpiry);
-
+            
             if (!string.IsNullOrEmpty(token) && isDateParsed)
             {
                 if (DateTime.UtcNow < tokenExpiry)
                 {
-                    // L'utilisateur est encore connecté, redirigez vers la page principale
-                    MainPage = new AboutPage();
+                    MainPage = new HomePage();
                 }
                 else
                 {
-                    // Le jeton a expiré
-                    Preferences.Remove("access_token");
-                    Preferences.Remove("token_expiry");
-
-                    // Redirigez vers la page de connexion
-                    App.Current.MainPage.DisplayAlert("Session expirée", "Veuillez vous reconnecter", "OK");
-                    MainPage = new LoginPage();
+                   Preferences.Remove("access_token");
+                   Preferences.Remove("token_expiry");
+                   App.Current.MainPage.DisplayAlert("Session expirée", "Veuillez vous reconnecter", "OK");
+                   MainPage = new LoginPage();
                 }
             }
             else
             {
-                // Aucun jeton trouvé, redirigez vers la page de connexion
                 MainPage = new LoginPage();
             }
-            */
+               
         }
 
         protected override void OnStart()
