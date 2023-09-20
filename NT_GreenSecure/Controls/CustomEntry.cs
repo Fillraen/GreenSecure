@@ -59,7 +59,6 @@ namespace NT_GreenSecure.Controls
             set { SetValue(ImageAlignmentProperty, value); }
         }
     }
-
     public enum ImageAlignment
     {
         Left,

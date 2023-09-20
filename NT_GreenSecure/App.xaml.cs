@@ -13,7 +13,7 @@ namespace NT_GreenSecure
         {
             InitializeComponent();
             MainPage = new AppShell();
-            //Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(48).Ticks);
+            // Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(48).Ticks);
             // Récupération de l'IdUser et de la date d'expiration du token
             int userId = Preferences.Get("IdUser", -1);
             long ticks = Preferences.Get("token_expiry", 0L);

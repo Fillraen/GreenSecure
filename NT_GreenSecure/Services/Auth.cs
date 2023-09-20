@@ -49,6 +49,5 @@ namespace NT_GreenSecure
                 return false;
             }
         }
-
     }
 }
