@@ -8,21 +8,18 @@ using Xamarin.Essentials;
 
 namespace NT_GreenSecure
 {
-    public class Auth
+    public class Auth : AesEncryption
     {
         private DAO_Users _daoUser;
-        private AesEncryption _aesEncryption;
 
         public Auth()
         {
             _daoUser = new DAO_Users();
-            _aesEncryption = new AesEncryption();
         }
 
         public async Task<bool> AuthenticateAsync(string email, string plainTextPassword)
         {
-            List<User> users = await _daoUser.GetAllUsersAsync();
-            User user = users.FirstOrDefault(u => u.Email == email);
+            User user = await _daoUser.GetUserByEmailAsync(email);
 
             if (user == null)
             {
@@ -30,18 +27,16 @@ namespace NT_GreenSecure
             }
 
             // bool isAuthenticated = userCredentials.ValidatePassword(plainTextPassword);
-            bool isAuthenticated = _aesEncryption.VerifyPassword(user.EncryptedPassword, plainTextPassword, user.EncryptionKey, user.EncryptionIV);
+            bool isAuthenticated = VerifyPassword(user.EncryptedPassword, plainTextPassword, user.GetEncryptionKey(), user.GetEncryptionIV());
 
             if (isAuthenticated)
             {
                 user.LastLoginDate = DateTime.UtcNow;
                 user.FailedLoginAttempts = 0;
                 
-                string token = GenerateAccessToken();
-
                 Preferences.Set("IdUser", user.UserId);
-                Preferences.Set("access_token", token);
-                Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(48));
+                Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(48).Ticks);
+
                 return true;
             }
             else
@@ -55,9 +50,5 @@ namespace NT_GreenSecure
             }
         }
 
-        public string GenerateAccessToken()
-        {
-            return Guid.NewGuid().ToString();
-        }
     }
 }

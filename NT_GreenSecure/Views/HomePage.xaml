@@ -10,10 +10,11 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
    
             </Grid.RowDefinitions>
-
-            <Image Source="./home_bg.png" Grid.Row="0"></Image>
+            <Label Text="Welcome to Green Secure" TextColor="Black" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="0"></Label>
+            <Image Source="./home_bg.png" Grid.Row="1" Aspect="AspectFill"></Image>
 
         </Grid>
     </ContentPage.Content>

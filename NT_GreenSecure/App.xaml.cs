@@ -12,34 +12,37 @@ namespace NT_GreenSecure
         public App()
         {
             InitializeComponent();
-
-            
             MainPage = new AppShell();
-            string token = Preferences.Get("access_token", string.Empty);
-            DateTime tokenExpiry;
-           
-            bool isDateParsed = DateTime.TryParse(Preferences.Get("token_expiry", string.Empty), out tokenExpiry);
-            
-            if (!string.IsNullOrEmpty(token) && isDateParsed)
+            //Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(48).Ticks);
+            // Récupération de l'IdUser et de la date d'expiration du token
+            int userId = Preferences.Get("IdUser", -1);
+            long ticks = Preferences.Get("token_expiry", 0L);
+
+            DateTime tokenExpiry = new DateTime(ticks);
+
+            if (userId != -1)
             {
                 if (DateTime.UtcNow < tokenExpiry)
                 {
-                    MainPage = new HomePage();
+                    // Vérification supplémentaire pour voir si l'utilisateur est toujours valide, si nécessaire
+
+                    Shell.Current.GoToAsync("//HomePage");
+
                 }
                 else
                 {
-                   Preferences.Remove("access_token");
-                   Preferences.Remove("token_expiry");
-                   App.Current.MainPage.DisplayAlert("Session expirée", "Veuillez vous reconnecter", "OK");
-                   MainPage = new LoginPage();
+                    Preferences.Remove("token_expiry");
+                    App.Current.MainPage.DisplayAlert("Session expirée", "Veuillez vous reconnecter", "OK");
+                    Shell.Current.GoToAsync("//LoginPage");
                 }
             }
             else
             {
-                MainPage = new LoginPage();
+                Shell.Current.GoToAsync("//LoginPage");
+
             }
-               
         }
+
 
         protected override void OnStart()
         {

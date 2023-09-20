@@ -1,16 +1,16 @@
 [
-    {
-        "UserId": 1,
-        "Username": "Alice",
-        "Email": "alice@example.com",
-        "EncryptedPassword": "bCsADRzlkx30RE5hrpaNJg==",
-        "CreatedDate": "2023-09-14T00:00:00",
-        "LastLoginDate": "2023-09-14T12:00:00",
-        "IsLocked": false,
-        "FailedLoginAttempts": 0,
-        "EncryptionKey": "6Gesa/QQhXMaXRq45dHnjHX5XajFqhivLkDab96Cbjw=",
-        "EncryptionIV": "u+yWc2xkiRB65mU2xpBAIQ=="
-    },
+  {
+    "UserId": 1,
+    "Username": "Alice",
+    "Email": "alice@example.com",
+    "EncryptedPassword": "fx3ylSPGumcWahz18NisMQ==",
+    "CreatedDate": "2023-09-14T00:00:00",
+    "LastLoginDate": "2023-09-14T12:00:00",
+    "IsLocked": false,
+    "FailedLoginAttempts": 0,
+    "EncryptionKey": "6Gesa/QQhXMaXRq45dHnjHX5XajFqhivLkDab96Cbjw=",
+    "EncryptionIV": "u+yWc2xkiRB65mU2xpBAIQ=="
+  },
     {
         "UserId": 2,
         "Username": "Bob",

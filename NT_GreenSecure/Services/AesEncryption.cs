@@ -13,7 +13,7 @@ namespace NT_GreenSecure.Services
 
         }
 
-        public string EncryptPassword(string plainText, string keyBase64, string vectorBase64)
+        protected string EncryptPassword(string plainText, string keyBase64, string vectorBase64)
         {
             using (Aes aesAlgorithm = Aes.Create())
             {
@@ -44,7 +44,7 @@ namespace NT_GreenSecure.Services
             }
         }
 
-        public string DecryptPassword(string cipherText, string keyBase64, string vectorBase64)
+        protected string DecryptPassword(string cipherText, string keyBase64, string vectorBase64)
         {
             using (Aes aesAlgorithm = Aes.Create())
             {
@@ -74,10 +74,11 @@ namespace NT_GreenSecure.Services
             }
         }
 
-        public bool VerifyPassword(string encryptPassword, string plainTextPassword, string keyBase64, string vectorBase64)
+        protected bool VerifyPassword(string encryptPassword, string plainTextPassword, string keyBase64, string vectorBase64)
         {
-            string decryptedPassword = DecryptPassword(encryptPassword, keyBase64, vectorBase64);
-            return decryptedPassword == plainTextPassword;
+            string newEncryptedPassword = EncryptPassword(plainTextPassword, keyBase64, vectorBase64);
+            bool result = encryptPassword == newEncryptedPassword;
+            return result;
         }
 
     }

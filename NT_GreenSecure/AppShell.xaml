@@ -37,16 +37,16 @@
             </Tab>
         </controls:TodoTabBar.LargeTab>
 
-        <Tab Title="Home" Icon="icon_home.png">
+        <Tab Icon="icon_home.png">
             <ShellContent ContentTemplate="{DataTemplate local:HomePage}" />
         </Tab>
-        <Tab Title="Vault" Icon="icon_vault.png">
+        <Tab Title="" Icon="icon_vault.png">
             <ShellContent ContentTemplate="{DataTemplate local:VaultPage}" />
         </Tab>
-        <Tab Title="Tools" Icon="icon_settings.png">
+        <Tab Title="" Icon="icon_settings.png">
             <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />
         </Tab>
-        <Tab Title="Login" Icon="icon_lock_green.png">
+        <Tab Title="" Icon="icon_logout.png">
             <ShellContent ContentTemplate="{DataTemplate local:LoginPage}" />
         </Tab>
     </controls:TodoTabBar>
