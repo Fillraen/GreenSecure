@@ -22,28 +22,7 @@ namespace NT_GreenSecure.Services
             using (StreamReader reader = new StreamReader(stream))
             {
                 string json = await reader.ReadToEndAsync();
-                List<UserJSON> usersJson = JsonConvert.DeserializeObject<List<UserJSON>>(json);
-
-                List<User> users = new List<User>();
-                foreach (var userJson in usersJson)
-                {
-                    User user = new User();
-                    // Copier les autres champs ici.
-                    user.UserId = userJson.UserId;
-                    user.Username = userJson.Username;
-                    user.Email = userJson.Email;
-                    user.EncryptedPassword = userJson.EncryptedPassword;
-                    user.CreatedDate = userJson.CreatedDate;
-                    user.LastLoginDate = userJson.LastLoginDate;
-                    user.IsLocked = userJson.IsLocked;
-                    user.FailedLoginAttempts = userJson.FailedLoginAttempts;
-                    user.UserCredentials = userJson.UserCredentials;
-                    user.SetEncryptionKey(userJson.EncryptionKey);
-                    user.SetEncryptionIV(userJson.EncryptionIV);
-
-                    users.Add(user);
-                }
-
+                List<User> users = JsonConvert.DeserializeObject<List<User>>(json);
                 return users;
             }
         }

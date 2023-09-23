@@ -21,8 +21,8 @@ namespace NT_GreenSecure.Models
 
         public List<Credentials> UserCredentials { get; set; }
 
-        private string EncryptionKey;
-        private string EncryptionIV;
+        protected string EncryptionKey;
+        protected string EncryptionIV;
 
 
         public User()

@@ -8,7 +8,7 @@ using NT_GreenSecure.Services;
 
 namespace NT_GreenSecure.Models
 {
-    public class Credentials : AesEncryption
+    public class Credentials : User
     {
         public int Id { get; set; }
         public int IdUser { get; set; }
@@ -24,8 +24,9 @@ namespace NT_GreenSecure.Models
         public DateTime LastModified { get; set; } // When was this credential last modified
         public int Complexity { get; set; }
         // a passer en prive et a recuprer dans le user par le constructeur
-        public string EncryptionKey { get; set; }
-        public string EncryptionIV { get; set; }
+
+        //temporaire
+
 
         public void SetPassword(string plainTextPassword)
         {
