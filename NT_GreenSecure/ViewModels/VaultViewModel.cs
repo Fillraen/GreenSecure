@@ -14,8 +14,7 @@ namespace NT_GreenSecure.ViewModels
 {
     public class VaultViewModel : BaseViewModel
     {
-        public ICommand CopyPasswordCommand { get; set; }
-        public ICommand DeletePasswordCommand { get; set; }
+        
 
         private ObservableCollection<Credentials> _credentials;
         public ObservableCollection<Credentials> Credentials
@@ -24,46 +23,83 @@ namespace NT_GreenSecure.ViewModels
             set => SetProperty(ref _credentials, value);
         }
 
-        private DAO_Credentials _daoCredentials;
+        private readonly DAO_Credentials _daoCredentials;
+        private readonly DAO_Users _daoUsers;
+
+        private int userId;
+        private User connectedUser;
 
         public VaultViewModel()
         {
             Title = "Vault";
             _daoCredentials = new DAO_Credentials();
+            _daoUsers = new DAO_Users();
+            userId = Preferences.Get("IdUser", -1);
 
-            _daoCredentials.CredentialsChanged += async (sender, args) => await LoadCredentialsAsync();
-            LoadCredentialsAsync().Wait();
 
-            CopyPasswordCommand = new Command<int>(CopyPassword);
-            DeletePasswordCommand = new Command<int>(DeletePassword);
+
+            Task.Run(async () =>
+            {
+                connectedUser = await _daoUsers.GetUserByIdAsync(userId);
+                LoadCredentialsAsync();
+            });
         }
+
 
         private async Task LoadCredentialsAsync()
         {
-            var credentialsList = await _daoCredentials.GetAllCredentialsAsync();
+            var (credentialsList, error) = await _daoCredentials.GetAllCredentialsAsync();
+            if (error != null)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", error, "OK");
+                return;
+            }
             Credentials = new ObservableCollection<Credentials>(credentialsList);
         }
 
-        private void CopyPassword(int id)
+        public async void CopyPassword(int id)
         {
-            // Trouvez le mot de passe correspondant à l'ID
             var credential = _credentials.FirstOrDefault(c => c.Id == id);
             if (credential != null)
             {
-                // string actualPassword = credential.GetActualPassword();
-                string actualPassword = "test";
-                if (!string.IsNullOrEmpty(actualPassword))
+                try
                 {
-                    Clipboard.SetTextAsync(actualPassword);
+                    string actualPassword = credential.GetActualPassword(connectedUser.EncryptionKey, connectedUser.EncryptionIV);
+                    if (!string.IsNullOrEmpty(actualPassword))
+                    {
+                        await Clipboard.SetTextAsync(actualPassword);
+                        await App.Current.MainPage.DisplayAlert("Success", "Password copied to clipboard!", "OK");
+                    }
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert("Error", "Password is empty", "OK");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
                 }
             }
         }
 
-
-        private async void DeletePassword(int id)
+        public async void DeletePassword(int id)
         {
-            // Supprimez le mot de passe en utilisant DAO_Credentials
-            await _daoCredentials.DeleteCredentialAsync(id);
+            var userResponse = await App.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete this?", "Yes", "No");
+            if (userResponse)
+            {
+                var message = await _daoCredentials.DeleteCredentialAsync(id);
+                if (message == null)
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", message, "OK");
+                    return;
+                }
+                else
+                {
+                    var credentialToRemove = _credentials.FirstOrDefault(c => c.Id == id);
+                    if (credentialToRemove != null)
+                        Credentials.Remove(credentialToRemove);
+                }
+            }
         }
     }
 }

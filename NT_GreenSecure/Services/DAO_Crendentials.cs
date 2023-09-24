@@ -7,94 +7,115 @@ using System.Reflection;
 using Xamarin.Essentials;
 using System.Linq;
 using System;
+using System.Net.Http;
+using System.Text;
+using System.Collections.ObjectModel;
 
 namespace NT_GreenSecure.Services
 {
-    public class DAO_Credentials
+    public class DAO_Credentials : IDao_Credentials
     {
+        private readonly string baseUrl = "http://10.0.2.2:8089/credentials";
+        private readonly HttpClient _client;
         public DAO_Credentials()
         {
-
+            _client = new HttpClient();
         }
-        public event EventHandler CredentialsChanged;
 
-        public async Task<List<Credentials>> GetAllCredentialsAsync()
+        public async Task<(ObservableCollection<Credentials> Result, string Error)> GetAllCredentialsAsync()
         {
-
-            var assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
-
-            Stream stream = assembly.GetManifestResourceStream("NT_GreenSecure.CustomData.credentials.json");
-
-            using (StreamReader reader = new StreamReader(stream))
+            Uri uri = new Uri(baseUrl);
+            try
             {
-                string json = await reader.ReadToEndAsync();
-                List<Credentials> credentials = JsonConvert.DeserializeObject<List<Credentials>>(json);
-                int IdUser = Preferences.Get("IdUser", int.MinValue);
-
-                return credentials.Where(c => c.IdUser == IdUser).ToList();
+                HttpResponseMessage response = await _client.GetAsync(uri).ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var credentials = JsonConvert.DeserializeObject<ObservableCollection<Credentials>>(content);
+                    return (credentials, null);
+                }
+                return (null, $"Error: {response.ReasonPhrase}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetCredentialsAsync: {ex.Message}");
+                return (null, $"Exception: {ex.Message}");
             }
         }
 
-
-        public async Task<Credentials> GetCredentialsByIdAsync(int id)
+        public async Task<(Credentials Result, string Error)> GetCredentialByIdAsync(int id)
         {
-            var credentials = await GetAllCredentialsAsync();
-            return credentials.FirstOrDefault(c => c.Id == id);
-        }
-
-        public async Task AddCredentialAsync(Credentials newCredential)
-        {
-            List<Credentials> credentials = await GetAllCredentialsAsync();
-            credentials.Add(newCredential);
-            // Sauvegarder dans le fichier JSON
-            SaveToFile(credentials);
-
-            CredentialsChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        public async Task UpdateCredentialAsync(Credentials updatedCredential)
-        {
-            List<Credentials> credentials = await GetAllCredentialsAsync();
-            var existingCredential = credentials.FirstOrDefault(c => c.Id == updatedCredential.Id);
-            if (existingCredential != null)
+            Uri uri = new Uri($"{baseUrl}/{id}");
+            try
             {
-                // Mettre à jour les champs
-                existingCredential.Username = updatedCredential.Username;
-                existingCredential.EmailAddress = updatedCredential.EmailAddress;
-                existingCredential.Url = updatedCredential.Url;
-                existingCredential.Name = updatedCredential.Name;
-                // etc.
-
-                // Sauvegarder dans le fichier JSON
-                SaveToFile(credentials);
-
-                CredentialsChanged?.Invoke(this, EventArgs.Empty);
+                HttpResponseMessage response = await _client.GetAsync(uri).ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var credential = JsonConvert.DeserializeObject<Credentials>(content);
+                    return (credential, null);
+                }
+                return (null, $"Error: {response.ReasonPhrase}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetCredentialByIdAsync: {ex.Message}");
+                return (null, $"Exception: {ex.Message}");
             }
         }
 
-        public async Task DeleteCredentialAsync(int id)
+        // Post
+        public async Task<string> AddCredentialAsync(Credentials credential)
         {
-            List<Credentials> credentials = await GetAllCredentialsAsync();
-            var credentialToRemove = credentials.FirstOrDefault(c => c.Id == id);
-            if (credentialToRemove != null)
+            var content = new StringContent(JsonConvert.SerializeObject(credential), Encoding.UTF8, "application/json");
+            try
             {
-                credentials.Remove(credentialToRemove);
-                // Sauvegarder dans le fichier JSON
-                SaveToFile(credentials);
-
-                CredentialsChanged?.Invoke(this, EventArgs.Empty);
+                HttpResponseMessage response = await _client.PostAsync(baseUrl, content);
+                if (!response.IsSuccessStatusCode)
+                    return $"Error: {response.ReasonPhrase}";
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AddCredentialAsync: {ex.Message}");
+                return $"Exception: {ex.Message}";
+            }
+            return null;
         }
 
-        private void SaveToFile(List<Credentials> credentials)
+        // Put
+        public async Task<string> UpdateCredentialAsync(Credentials credential)
         {
-            string json = JsonConvert.SerializeObject(credentials);
-            
-            // Écrire ICI le JSON dans le fichier
-            
+            var content = new StringContent(JsonConvert.SerializeObject(credential), Encoding.UTF8, "application/json");
+            try
+            {
+                HttpResponseMessage response = await _client.PutAsync($"{baseUrl}/{credential.Id}", content);
+                if (!response.IsSuccessStatusCode)
+                    return $"Error: {response.ReasonPhrase}";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateCredentialAsync: {ex.Message}");
+                return $"Exception: {ex.Message}";
+            }
+            return null;
         }
 
-
+        // Delete
+        public async Task<string> DeleteCredentialAsync(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = await _client.DeleteAsync($"{baseUrl}/{id}");
+                if (!response.IsSuccessStatusCode)
+                    return $"Error: {response.ReasonPhrase}";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteCredentialAsync: {ex.Message}");
+                return $"Exception: {ex.Message}";
+            }
+            return null;
+        }
 
     }
 }

@@ -8,7 +8,7 @@ using NT_GreenSecure.Services;
 
 namespace NT_GreenSecure.Models
 {
-    public class Credentials : User
+    public class Credentials : AesEncryption
     {
         public int Id { get; set; }
         public int IdUser { get; set; }
@@ -16,28 +16,32 @@ namespace NT_GreenSecure.Models
         public string EmailAddress { get; set; } // Email address associated with the credential
         public string Url { get; set; } // URL of the website or app
         public string Name { get; set; }
-        private string EncryptedPassword { get; set; } // Encrypted Password
+        public string EncryptedPassword { get; set; } // Encrypted Password
         
         public string Domain { get; set; } // Website or App the credential is for
         public string Category { get; set; } // E.g., Social Media, Banking
-        public DateTime DateCreated { get; set; } // When was this credential created
-        public DateTime LastModified { get; set; } // When was this credential last modified
+        public string DateCreated { get; set; } // When was this credential created
+        public string LastModified { get; set; } // When was this credential last modified
         public int Complexity { get; set; }
-        // a passer en prive et a recuprer dans le user par le constructeur
 
-        //temporaire
+        public string urlIcon { get; set; }
 
+        public Credentials (){
+            urlIcon = "https://www.google.com/s2/favicons?domain=" + Url;
+        }
 
-        public void SetPassword(string plainTextPassword)
+        public void SetPassword(string plainTextPassword, string EncryptionKey, string EncryptionIV)
         {
             EncryptedPassword = EncryptPassword(plainTextPassword, EncryptionKey, EncryptionIV);
             EvaluatePasswordComplexity(plainTextPassword);
         }
 
-        public string GetActualPassword()
+        public string GetActualPassword(string EncryptionKey, string EncryptionIV)
         {
+
             return DecryptPassword(EncryptedPassword, EncryptionKey, EncryptionIV);
         }
+
         
         public int EvaluatePasswordComplexity(string password)
         {

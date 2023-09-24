@@ -33,6 +33,8 @@ namespace NT_GreenSecure
                 {
                     Preferences.Remove("token_expiry");
                     App.Current.MainPage.DisplayAlert("Session expirée", "Veuillez vous reconnecter", "OK");
+
+                    // NE MARCHE PAS
                     Shell.Current.GoToAsync("//LoginPage");
                 }
             }

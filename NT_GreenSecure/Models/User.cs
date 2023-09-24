@@ -21,9 +21,8 @@ namespace NT_GreenSecure.Models
 
         public List<Credentials> UserCredentials { get; set; }
 
-        protected string EncryptionKey;
-        protected string EncryptionIV;
-
+        public string EncryptionKey { get; set; }
+        public string EncryptionIV { get; set; }
 
         public User()
         {
@@ -31,8 +30,6 @@ namespace NT_GreenSecure.Models
             UserCredentials = new List<Credentials>();
             IsLocked = false;
             FailedLoginAttempts = 0;
-
-            
         }
         public void SetEncryptionKey(string key = null)
         {
@@ -57,7 +54,7 @@ namespace NT_GreenSecure.Models
             {
                 using (Aes aes = Aes.Create())
                 {
-                    EncryptionIV = Convert.ToBase64String(aes.Key);
+                    EncryptionIV = Convert.ToBase64String(aes.IV);
                 }
             }
             else
@@ -85,23 +82,5 @@ namespace NT_GreenSecure.Models
         {
             return DecryptPassword(EncryptedPassword, EncryptionKey, EncryptionIV);
         }
-    }
-
-    public class UserJSON
-    {
-        public int UserId { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string EncryptedPassword { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-        public DateTime LastLoginDate { get; set; }
-        public bool IsLocked { get; set; }
-        public int FailedLoginAttempts { get; set; }
-
-        public List<Credentials> UserCredentials { get; set; }
-
-        public string EncryptionKey { get; set; }
-        public string EncryptionIV { get; set; }
     }
 }

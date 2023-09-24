@@ -35,6 +35,7 @@ namespace NT_GreenSecure.ViewModels.Popup
                 RequestClosePopup?.Invoke();
 
                 await Shell.Current.GoToAsync($"//{nameof(VaultPage)}");
+
             }
             else
             {

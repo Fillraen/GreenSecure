@@ -3,13 +3,13 @@
     "UserId": 1,
     "Username": "Alice",
     "Email": "alice@example.com",
-    "EncryptedPassword": "fx3ylSPGumcWahz18NisMQ==",
+    "EncryptedPassword": "H5f9xOSS/B31eAh5JxW3cQ==",
     "CreatedDate": "2023-09-14T00:00:00",
     "LastLoginDate": "2023-09-14T12:00:00",
     "IsLocked": false,
     "FailedLoginAttempts": 0,
-    "EncryptionKey": "6Gesa/QQhXMaXRq45dHnjHX5XajFqhivLkDab96Cbjw=",
-    "EncryptionIV": "u+yWc2xkiRB65mU2xpBAIQ=="
+    "EncryptionKey": "G7ouRoD8XWSsm97lvMDLL+4g6+w7WbntORfoSMJKYqo=",
+    "EncryptionIV": "CaF4bSYVkMF7LoY4OETF9w=="
   },
     {
         "UserId": 2,

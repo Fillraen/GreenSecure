@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NT_GreenSecure.Views.VaultPage"
+             x:Name="VaultPageName"
              xmlns:vm="clr-namespace:NT_GreenSecure.ViewModels"
              xmlns:model="clr-namespace:NT_GreenSecure.Models"
              xmlns:controls="clr-namespace:NT_GreenSecure.Controls"
@@ -12,7 +13,7 @@
         <vm:VaultViewModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.Content >
+    <ContentPage.Content>
         <Grid >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -35,9 +36,6 @@
                 </StackLayout>
             </StackLayout>
 
-
-
-
             <Frame Grid.Row="1" BackgroundColor="Transparent">
                 <CollectionView ItemsSource="{Binding Credentials}" SelectionMode="Single" >
                     <CollectionView.ItemsLayout>
@@ -56,9 +54,8 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Frame Grid.Column="0" Style="{StaticResource CollectionIconPasswordFrameVault}">
-                                            <Image Source="icon_netflix_password" Style="{StaticResource CollectionIconPasswordIconVault}"/>
+                                            <Image Source="{Binding urlIcon}" Style="{StaticResource CollectionIconPasswordIconVault}"/>
                                         </Frame>
-
 
                                         <StackLayout Grid.Column="1" x:DataType="model:Credentials" Style="{StaticResource CollectionGroupDataVault}">
                                             <Label Text="{Binding Name}" Style="{StaticResource CollectionMainDataVault}" />
@@ -67,11 +64,9 @@
 
                                         <StackLayout Grid.Column="2" Style="{StaticResource CollectionGroupActionBtn}" >
                                             <Image Source="icon_copy" Style="{StaticResource CollectionFirstActionBtn}">
-                                                <!--
                                                 <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={x:Reference Name=VaultViewModel}, Path=BindingContext.CopyPasswordCommand}" CommandParameter="{Binding Id}"/>
+                                                    <TapGestureRecognizer Command="{Binding Source={x:Reference VaultPageName}, Path=CopyPasswordCommand}" CommandParameter="{Binding Id}"/>
                                                 </Image.GestureRecognizers>
-                                                -->
                                             </Image>
 
                                             <Image Source="icon_delete_password">
@@ -81,7 +76,6 @@
                                                 </Image.GestureRecognizers>
                                                 -->
                                             </Image>
-
                                         </StackLayout>
                                         </Grid>
                                     </Frame>

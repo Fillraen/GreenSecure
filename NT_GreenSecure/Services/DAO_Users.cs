@@ -33,5 +33,12 @@ namespace NT_GreenSecure.Services
             User user = users.Find(u => u.Email == email);
             return user;
         }
+
+        public async Task<User> GetUserByIdAsync(int id){
+            List<User> users = await GetAllUsersAsync();
+            User user = users.Find(u => u.UserId == id);
+            return user;
+        }   
     }
+
 }
