@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'slim/slim-skeleton',
-        'pretty_version' => '4.5.0',
-        'version' => '4.5.0.0',
-        'reference' => '1997d86c18837d26248a2cca204fabb6a430329c',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => 'ad59a5a830058c6c1cd686d4dbfa169bd0818318',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -512,9 +512,9 @@
             'dev_requirement' => false,
         ),
         'slim/slim-skeleton' => array(
-            'pretty_version' => '4.5.0',
-            'version' => '4.5.0.0',
-            'reference' => '1997d86c18837d26248a2cca204fabb6a430329c',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'ad59a5a830058c6c1cd686d4dbfa169bd0818318',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

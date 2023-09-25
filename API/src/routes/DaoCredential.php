@@ -30,6 +30,27 @@ return function (App $app) {
             }
         });
 
+        $group->get('/user/{id}',function (Request $request, Response $response, array $args){
+            $id = $args['id'];
+            $sql = "SELECT * FROM `credentials` WHERE IdUser = :id";
+            try {
+                $db = new \App\config\db();
+                $conn = $db->connect();
+                $stmt = $conn->prepare($sql);
+                $stmt->bindParam(':id', $id);
+                $stmt->execute();
+                $credential = $stmt->fetchAll(PDO::FETCH_OBJ);
+                $db = null;
+                $response->getBody()->write(json_encode($credential));
+                return $response->withHeader('content-type', 'application/json')->withStatus(200);
+            } catch (PDOException $e) {
+                $error = array("message" => $e->getMessage());
+                $response->getBody()->write(json_encode($error));
+                return $response->withHeader('content-type', 'application/json')->withStatus(500);
+            }
+        });
+
+
         // Sélectionner un mot de passe par ID
         $group->get('/{id}', function (Request $request, Response $response, array $args) {
             $id = $args['id'];
