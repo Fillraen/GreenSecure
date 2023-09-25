@@ -54,7 +54,7 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Frame Grid.Column="0" Style="{StaticResource CollectionIconPasswordFrameVault}">
-                                            <Image Source="{Binding urlIcon}" Style="{StaticResource CollectionIconPasswordIconVault}"/>
+                                            <Image Source="{Binding urlIcon}" AbsoluteLayout.LayoutBounds="0,0,1,1"   AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Style="{StaticResource CollectionIconPasswordIconVault}"/>
                                         </Frame>
 
                                         <StackLayout Grid.Column="1" x:DataType="model:Credentials" Style="{StaticResource CollectionGroupDataVault}">

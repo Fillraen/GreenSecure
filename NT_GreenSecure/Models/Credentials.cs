@@ -27,7 +27,6 @@ namespace NT_GreenSecure.Models
         public string urlIcon { get; set; }
 
         public Credentials (){
-            urlIcon = "https://www.google.com/s2/favicons?domain=" + Url;
         }
 
         public void SetPassword(string plainTextPassword, string EncryptionKey, string EncryptionIV)
@@ -68,6 +67,11 @@ namespace NT_GreenSecure.Models
                 complexityScore += 20;
 
             return complexityScore;
+        }
+
+        public void setUrlIcon(string url)
+        {
+            urlIcon = "https://www.google.com/s2/favicons?domain=" + url;
         }
     }
 }

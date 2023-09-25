@@ -18,10 +18,10 @@
             <Color x:Key="White">#FFFFFF</Color>
 
             <!-- Define font size -->
-            <x:Double x:Key="FontSizeSmall">8</x:Double>
-            <x:Double x:Key="FontSizeMedium">16</x:Double>
-            <x:Double x:Key="FontSizeLarge">30</x:Double>
-            <x:Double x:Key="FontSizeExtraLarge">36</x:Double>
+            <x:Double x:Key="FontSizeSmall">12</x:Double>
+            <x:Double x:Key="FontSizeMedium">20</x:Double>
+            <x:Double x:Key="FontSizeLarge">32</x:Double>
+            <x:Double x:Key="FontSizeExtraLarge">40</x:Double>
 
             <!--#region  Set robot as default font for elements with text -->
 
@@ -156,9 +156,8 @@
 
 
             <!-- #region Vault page -->
-
             <Style TargetType="Label" x:Key="VaultTitle">
-                <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}" />
+                <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}" />
                 <Setter Property="TextColor" Value="{StaticResource White}"></Setter>
                 <Setter Property="FontFamily" Value="Roboto-Bold.ttf#Roboto" />
                 <Setter Property="HorizontalOptions" Value="StartAndExpand"></Setter>
@@ -196,7 +195,6 @@
 
             </Style>
 
-
             <!-- Collection View All Pasword -->
             <Style TargetType="Frame" x:Key="CollectionItemPasswordVault">
                 <Setter Property="CornerRadius" Value="10"/>
@@ -213,6 +211,8 @@
             <Style TargetType="Image" x:Key="CollectionIconPasswordIconVault">
                 <Setter Property="Aspect" Value="AspectFill"/>
                 <Setter Property="Margin" Value="10"/>
+                <Setter Property="HeightRequest" Value="32"/>
+                <Setter Property="WidthRequest" Value="32"/>
             </Style>
 
             <Style TargetType="StackLayout" x:Key="CollectionGroupDataVault">

@@ -169,7 +169,6 @@ return function (App $app) {
                 return $response->withHeader('content-type', 'application/json')->withStatus(500);
             }
         });
-
     });
 };
 

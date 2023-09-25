@@ -32,6 +32,13 @@ namespace NT_GreenSecure.Services
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var credentials = JsonConvert.DeserializeObject<ObservableCollection<Credentials>>(content);
+
+                    // Parcourir chaque Credentials dans la collection
+                    foreach (var credential in credentials)
+                    {
+                        credential.setUrlIcon(credential.Url); // Appeler setUrlIcon pour chaque Credentials
+                    }
+
                     return (credentials, null);
                 }
                 return (null, $"Error: {response.ReasonPhrase}");
@@ -42,6 +49,7 @@ namespace NT_GreenSecure.Services
                 return (null, $"Exception: {ex.Message}");
             }
         }
+
 
         public async Task<(Credentials Result, string Error)> GetCredentialByIdAsync(int id)
         {
