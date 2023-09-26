@@ -31,7 +31,7 @@ namespace NT_GreenSecure
 
             if (isAuthenticated)
             {
-                user.LastLoginDate = DateTime.UtcNow;
+                user.LastLoginDate = DateTime.UtcNow.ToString();
                 user.FailedLoginAttempts = 0;
                 
                 Preferences.Set("IdUser", user.UserId);
@@ -44,7 +44,7 @@ namespace NT_GreenSecure
                 user.FailedLoginAttempts++;
                 if (user.FailedLoginAttempts >= 3)
                 {
-                    user.IsLocked = true;
+                    user.IsLocked = 1;
                 }
                 return false;
             }

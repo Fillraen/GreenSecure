@@ -10,9 +10,9 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Collections.ObjectModel;
-
+using System.Net.Http.Headers;
 namespace NT_GreenSecure.Services
-{
+{//https://www.youtube.com/watch?v=aQAhlxKpOak
     public class DAO_Credentials : IDao_Credentials
     {
         private readonly string baseUrl = "http://10.0.2.2:8089/credentials";
@@ -20,7 +20,40 @@ namespace NT_GreenSecure.Services
         public DAO_Credentials()
         {
             _client = new HttpClient();
+
+            Task.Run(async () =>
+            {
+                GetUserByEmailAsync("user1@example.com");
+            });
+
         }
+
+
+        public async Task<(User Result, string Error)> GetUserByEmailAsync(string email)
+        {
+            Uri uri = new Uri($"{baseUrl}/by-email");
+            try
+            {
+                _client.DefaultRequestHeaders.Add("Email", email); // Ajouter l'email dans le header
+                HttpResponseMessage response = await _client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var user = JsonConvert.DeserializeObject<User>(responseContent);
+
+                    _client.DefaultRequestHeaders.Remove("Email"); // N'oubliez pas de retirer le header après la requête
+                    return (user, null);
+                }
+                return (null, $"Error: {response.ReasonPhrase}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetUserByEmailAsync: {ex.Message}");
+                return (null, $"Exception: {ex.Message}");
+            }
+        }
+
 
         public async Task<(ObservableCollection<Credentials> Result, string Error)> GetAllCredentialsAsync()
         {

@@ -14,9 +14,10 @@ namespace NT_GreenSecure.Views.Popup
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CredentialDetailPopup : Rg.Plugins.Popup.Pages.PopupPage
     {
-        public CredentialDetailPopup(Credentials credentials)
+        public CredentialDetailPopup(Credentials selectedCredential)
         {
             InitializeComponent();
+            BindingContext = new CredentialDetailViewModel(selectedCredential);
         }
     }
 }

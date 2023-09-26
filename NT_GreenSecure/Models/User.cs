@@ -14,9 +14,9 @@ namespace NT_GreenSecure.Models
         public string Email { get; set; }
         public string EncryptedPassword { get; set; }
        
-        public DateTime CreatedDate { get; set; }
-        public DateTime LastLoginDate { get; set; }
-        public bool IsLocked { get; set; }
+        public string CreatedDate { get; set; }
+        public string LastLoginDate { get; set; }
+        public int IsLocked { get; set; }
         public int FailedLoginAttempts { get; set; }
 
         public List<Credentials> UserCredentials { get; set; }
@@ -26,9 +26,9 @@ namespace NT_GreenSecure.Models
 
         public User()
         {
-            CreatedDate = DateTime.UtcNow;
+            CreatedDate = DateTime.UtcNow.ToString();
             UserCredentials = new List<Credentials>();
-            IsLocked = false;
+            IsLocked = 0;
             FailedLoginAttempts = 0;
         }
         public void SetEncryptionKey(string key = null)

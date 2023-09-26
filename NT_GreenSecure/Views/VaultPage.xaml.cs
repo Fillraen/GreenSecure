@@ -13,16 +13,9 @@ namespace NT_GreenSecure.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class VaultPage : ContentPage
     {
-        VaultViewModel _viewModel;
-        public ICommand CopyPasswordCommand { get; set; }
-        public ICommand DeletePasswordCommand { get; set; }
-
         public VaultPage()
         {
             InitializeComponent();
-            _viewModel = new VaultViewModel();
-            CopyPasswordCommand = new Command<int>(_viewModel.CopyPassword);
-            DeletePasswordCommand = new Command<int>(_viewModel.DeletePassword);
         }
 
     }

@@ -1,5 +1,7 @@
 ﻿using NT_GreenSecure.Models;
 using NT_GreenSecure.Services;
+using NT_GreenSecure.Views.Popup;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,7 +16,9 @@ namespace NT_GreenSecure.ViewModels
 {
     public class VaultViewModel : BaseViewModel
     {
-        
+        public ICommand OpenCredentialDetailCommand { get; set; }
+        public ICommand CopyPasswordCommand { get; set; }
+        public ICommand DeletePasswordCommand { get; set; }
 
         private ObservableCollection<Credentials> _credentials;
         public ObservableCollection<Credentials> Credentials
@@ -36,13 +40,21 @@ namespace NT_GreenSecure.ViewModels
             _daoUsers = new DAO_Users();
             userId = Preferences.Get("IdUser", -1);
 
-
+            CopyPasswordCommand = new Command<int>(CopyPassword);
+            DeletePasswordCommand = new Command<int>(DeletePassword);
+            OpenCredentialDetailCommand = new Command<Credentials>(OpenCredentialDetail);
 
             Task.Run(async () =>
             {
                 connectedUser = await _daoUsers.GetUserByIdAsync(userId);
                 LoadCredentialsAsync();
             });
+        }
+
+        private async void OpenCredentialDetail(Credentials selectedCredential)
+        {
+            var page = new CredentialDetailPopup(selectedCredential);
+            await PopupNavigation.Instance.PushAsync(page);
         }
 
 
