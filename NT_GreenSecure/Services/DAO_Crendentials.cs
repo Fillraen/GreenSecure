@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
+
 namespace NT_GreenSecure.Services
 {//https://www.youtube.com/watch?v=aQAhlxKpOak
     public class DAO_Credentials : IDao_Credentials
@@ -27,22 +28,34 @@ namespace NT_GreenSecure.Services
             });
 
         }
-
-
         public async Task<(User Result, string Error)> GetUserByEmailAsync(string email)
         {
-            Uri uri = new Uri($"{baseUrl}/by-email");
+            Uri uri = new Uri($"{baseUrl}/user/by-email");
             try
             {
-                _client.DefaultRequestHeaders.Add("Email", email); // Ajouter l'email dans le header
-                HttpResponseMessage response = await _client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
-                
+                var request = new HttpRequestMessage();
+                request.RequestUri = uri;
+                request.Method = HttpMethod.Get;
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                // Ici, je suppose que vous voulez envoyer la valeur de la variable 'email' comme header personnalisé, 
+                // et non la chaîne littérale "user1@example.com"
+                request.Headers.Add("Email", email);
+
+                HttpResponseMessage response = await _client.SendAsync(request);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var user = JsonConvert.DeserializeObject<User>(responseContent);
 
-                    _client.DefaultRequestHeaders.Remove("Email"); // N'oubliez pas de retirer le header après la requête
+                    // Récupérer la valeur du header personnalisé 'Email'
+                    if (response.Headers.TryGetValues("Email", out var emails))
+                    {
+                        string returnedEmail = emails.FirstOrDefault();
+                        // Vous pouvez maintenant comparer ou utiliser 'returnedEmail' comme vous le souhaitez
+                    }
+
+                    var user = JsonConvert.DeserializeObject<User>(responseContent);
                     return (user, null);
                 }
                 return (null, $"Error: {response.ReasonPhrase}");
@@ -53,7 +66,6 @@ namespace NT_GreenSecure.Services
                 return (null, $"Exception: {ex.Message}");
             }
         }
-
 
         public async Task<(ObservableCollection<Credentials> Result, string Error)> GetAllCredentialsAsync()
         {
@@ -82,8 +94,6 @@ namespace NT_GreenSecure.Services
                 return (null, $"Exception: {ex.Message}");
             }
         }
-
-
         public async Task<(Credentials Result, string Error)> GetCredentialByIdAsync(int id)
         {
             Uri uri = new Uri($"{baseUrl}/{id}");
@@ -104,7 +114,6 @@ namespace NT_GreenSecure.Services
                 return (null, $"Exception: {ex.Message}");
             }
         }
-
         // Post
         public async Task<string> AddCredentialAsync(Credentials credential)
         {
@@ -122,7 +131,6 @@ namespace NT_GreenSecure.Services
             }
             return null;
         }
-
         // Put
         public async Task<string> UpdateCredentialAsync(Credentials credential)
         {
@@ -140,7 +148,6 @@ namespace NT_GreenSecure.Services
             }
             return null;
         }
-
         // Delete
         public async Task<string> DeleteCredentialAsync(int id)
         {
@@ -157,6 +164,5 @@ namespace NT_GreenSecure.Services
             }
             return null;
         }
-
     }
 }

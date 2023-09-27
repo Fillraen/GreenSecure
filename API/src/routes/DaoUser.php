@@ -35,15 +35,17 @@ return function (App $app) {
             }
         });
 
-        $group->get('/by-email', function (Request $request, Response $response) {
+        $group->get('/user/by-email', function (Request $request, Response $response) {
             try {
                 $email = $request->getHeaderLine('Email');
+
                 // Log pour déboguer
                 error_log("Email: $email");
+
                 $db = new \App\config\db();
                 $conn = $db->connect();
 
-                $sql = "SELECT * FROM `user` WHERE Email = :email";
+                $sql = "SELECT * FROM `user` WHERE email = :email";
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':email', $email);
                 $stmt->execute();
@@ -54,15 +56,27 @@ return function (App $app) {
                 error_log(print_r($user, true));
 
                 $response->getBody()->write(json_encode($user));
-                return $response->withHeader('content-type', 'application/json')->withStatus(200);
+
+                // Ajouter le header 'Email' à la réponse
+                return $response
+                    ->withHeader('content-type', 'application/json')
+                    ->withHeader('Email', $email)
+                    ->withStatus(200);
             } catch (Exception $e) {
                 // Log pour déboguer
                 error_log($e->getMessage());
+
                 $error = array("message" => $e->getMessage());
                 $response->getBody()->write(json_encode($error));
-                return $response->withHeader('content-type', 'application/json')->withStatus(500);
+
+                // Ajouter le header 'Email' à la réponse même en cas d'erreur
+                return $response
+                    ->withHeader('content-type', 'application/json')
+                    ->withHeader('Email', $email) // ajouter ce header à la réponse
+                    ->withStatus(500);
             }
         });
+
 
 // Sélectionner un utilisateur par ID
         $group->get('/{id}', function (Request $request, Response $response, array $args) {
