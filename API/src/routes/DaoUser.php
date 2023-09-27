@@ -50,7 +50,7 @@ return function (App $app) {
                 $stmt->bindParam(':email', $email);
                 $stmt->execute();
 
-                $user = $stmt->fetchAll(PDO::FETCH_OBJ);
+                $user = $stmt->fetch(PDO::FETCH_OBJ);
 
                 // Log pour déboguer
                 error_log(print_r($user, true));
@@ -89,7 +89,7 @@ return function (App $app) {
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();
-                $user = $stmt->fetchAll(PDO::FETCH_OBJ);
+                $user = $stmt->fetch(PDO::FETCH_OBJ);
                 $db = null;
                 $response->getBody()->write(json_encode($user));
                 return $response->withHeader('content-type', 'application/json')->withStatus(200);

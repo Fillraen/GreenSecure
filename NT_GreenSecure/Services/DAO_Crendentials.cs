@@ -30,16 +30,12 @@ namespace NT_GreenSecure.Services
         }
         public async Task<(User Result, string Error)> GetUserByEmailAsync(string email)
         {
-            Uri uri = new Uri($"{baseUrl}/user/by-email");
+            Uri uri = new Uri("http://10.0.2.2:8089/users/user/by-email");
             try
             {
                 var request = new HttpRequestMessage();
                 request.RequestUri = uri;
                 request.Method = HttpMethod.Get;
-                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                // Ici, je suppose que vous voulez envoyer la valeur de la variable 'email' comme header personnalisé, 
-                // et non la chaîne littérale "user1@example.com"
                 request.Headers.Add("Email", email);
 
                 HttpResponseMessage response = await _client.SendAsync(request);
@@ -47,14 +43,6 @@ namespace NT_GreenSecure.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-
-                    // Récupérer la valeur du header personnalisé 'Email'
-                    if (response.Headers.TryGetValues("Email", out var emails))
-                    {
-                        string returnedEmail = emails.FirstOrDefault();
-                        // Vous pouvez maintenant comparer ou utiliser 'returnedEmail' comme vous le souhaitez
-                    }
-
                     var user = JsonConvert.DeserializeObject<User>(responseContent);
                     return (user, null);
                 }
