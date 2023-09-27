@@ -6,7 +6,7 @@
     "EncryptedPassword": "H5f9xOSS/B31eAh5JxW3cQ==",
     "CreatedDate": "2023-09-14T00:00:00",
     "LastLoginDate": "2023-09-14T12:00:00",
-    "IsLocked": false,
+    "IsLocked": 0,
     "FailedLoginAttempts": 0,
     "EncryptionKey": "G7ouRoD8XWSsm97lvMDLL+4g6+w7WbntORfoSMJKYqo=",
     "EncryptionIV": "CaF4bSYVkMF7LoY4OETF9w=="
@@ -18,7 +18,7 @@
         "EncryptedPassword": "bCsADRzlkx30RE5hrpaNJg==",
         "CreatedDate": "2023-09-15T00:00:00",
         "LastLoginDate": "2023-09-15T12:00:00",
-        "IsLocked": false,
+        "IsLocked": 0,
         "FailedLoginAttempts": 0,
         "EncryptionKey": "6Gesa/QQhXMaXRq45dHnjHX5XajFqhivLkDab96Cbjw=",
         "EncryptionIV": "u+yWc2xkiRB65mU2xpBAIQ=="

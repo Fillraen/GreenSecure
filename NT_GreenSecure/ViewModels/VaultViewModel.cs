@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NT_GreenSecure.ViewModels
 {
@@ -54,9 +55,8 @@ namespace NT_GreenSecure.ViewModels
         private async void OpenCredentialDetail(Credentials selectedCredential)
         {
             var page = new CredentialDetailPopup(selectedCredential);
-            await PopupNavigation.Instance.PushAsync(page);
+            await PopupNavigation.Instance.PushAsync(page); 
         }
-
 
         private async Task LoadCredentialsAsync()
         {

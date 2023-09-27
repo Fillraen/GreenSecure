@@ -22,12 +22,8 @@ namespace NT_GreenSecure.Services
         {
             _client = new HttpClient();
 
-            Task.Run(async () =>
-            {
-                GetUserByEmailAsync("user1@example.com");
-            });
-
         }
+        /*
         public async Task<(User Result, string Error)> GetUserByEmailAsync(string email)
         {
             Uri uri = new Uri("http://10.0.2.2:8089/users/user/by-email");
@@ -54,7 +50,7 @@ namespace NT_GreenSecure.Services
                 return (null, $"Exception: {ex.Message}");
             }
         }
-
+        */
         public async Task<(ObservableCollection<Credentials> Result, string Error)> GetAllCredentialsAsync()
         {
             Uri uri = new Uri(baseUrl);
