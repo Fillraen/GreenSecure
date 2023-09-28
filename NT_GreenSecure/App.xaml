@@ -42,8 +42,6 @@
             </Style>
 
             <!-- #endregion -->
-
-
             <!--#region home page -->
 
             <Style TargetType="Label" x:Key="WelcomeTitle">
@@ -83,7 +81,6 @@
                 <Setter Property="BorderWidth" Value="2"/> 
             </Style>
             <!-- #endregion -->
-
             <!-- #region Popup login /register page -->
             <Style TargetType="controls:CustomFrame" x:Key="HeaderFramePopup">
                 <Setter Property="CornerRadius" Value="50,50,0,0"/>
@@ -153,8 +150,6 @@
                 <Setter Property="TextTransform" Value="None"/>
             </Style>
             <!-- #endregion -->
-
-
             <!-- #region Vault page -->
             <Style TargetType="Label" x:Key="VaultTitle">
                 <Setter Property="FontSize" Value="{StaticResource FontSizeLarge}" />
@@ -248,6 +243,44 @@
             </Style>
 
             <!-- #endregion -->
+            <!-- #region detail password popup-->
+
+            <Style TargetType="Frame" x:Key="FormEditPopup">
+                <Setter Property="CornerRadius" Value="0"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="BackgroundColor" Value="{StaticResource White}"/>
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Padding" Value="0"/>
+            </Style>
+
+            <Style TargetType="Frame" x:Key="DetailPasswordFrame">
+                <Setter Property="CornerRadius" Value="0"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Margin" Value="0,0,0,10"/>
+                
+            </Style>
+
+            <Style TargetType="Label" x:Key="DetailPasswordTitle">
+                <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}" />
+                <Setter Property="FontFamily" Value="Roboto-Regular.ttf#Roboto" />
+            </Style>
+
+            <Style TargetType="controls:CustomEntry" x:Key="DetailPasswordEntry">
+                <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}"/>
+                <Setter Property="TextColor" Value="{StaticResource TextColor}"/>
+                <Setter Property="PlaceholderColor" Value="{StaticResource TextColor}" />
+                <Setter Property="FontFamily" Value="Roboto-Bold.ttf#Roboto" />
+                <Setter Property="Margin" Value="0,0,0,0"/>
+            </Style>
+
+            <Style TargetType="Entry" x:Key="DetailPasswordEntry2">
+                <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}"/>
+                <Setter Property="TextColor" Value="{StaticResource TextColor}"/>
+                <Setter Property="PlaceholderColor" Value="{StaticResource TextColor}" />
+                <Setter Property="FontFamily" Value="Roboto-Bold.ttf#Roboto" />
+                <Setter Property="Margin" Value="0,0,0,0"/>
+            </Style>
+                <!-- #endregion -->
         </ResourceDictionary>
     </Application.Resources>
 </Application>
