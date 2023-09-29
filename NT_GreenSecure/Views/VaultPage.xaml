@@ -36,17 +36,16 @@
                 </StackLayout>
             </StackLayout>
 
-            <Frame Grid.Row="1" BackgroundColor="Transparent">
+            <Frame Grid.Row="1" BackgroundColor="Transparent" Margin="0" Padding="20,10,20,5">
                 <CollectionView ItemsSource="{Binding Credentials}" SelectionMode="None" >
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical"/>
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout BackgroundColor="Transparent">
-                                
+                            <StackLayout BackgroundColor="Transparent"> 
                                 <Frame Style="{StaticResource CollectionItemPasswordVault}">
-                                    <Grid >
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="Auto" />
@@ -64,15 +63,12 @@
                                                 <Label Text="{Binding EmailAddress}" Style="{StaticResource CollectionSecondDataVault}"/>
                                             </StackLayout>
                                         </StackLayout>
-                                        
-
                                         <StackLayout Grid.Column="1" Style="{StaticResource CollectionGroupActionBtn}" >
                                             <Image Source="icon_copy" Style="{StaticResource CollectionFirstActionBtn}">
                                                 <Image.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding Source={x:Reference VaultPageName}, Path=BindingContext.CopyPasswordCommand}" CommandParameter="{Binding Id}"/>
                                                 </Image.GestureRecognizers>
                                             </Image>
-
                                             <Image Source="icon_delete_password">
                                                 <Image.GestureRecognizers>
                                                     <TapGestureRecognizer Command="{Binding Source={x:Reference Name=VaultPageName}, Path=BindingContext.DeletePasswordCommand}" CommandParameter="{Binding Id}"/>
