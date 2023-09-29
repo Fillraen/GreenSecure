@@ -10,6 +10,9 @@ namespace NT_GreenSecure.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        public IDao_Credentials<Credentials> DaoCredentials => DependencyService.Get<IDao_Credentials<Credentials>>();
+        public IDao_Users<User> DaoUsers => DependencyService.Get<IDao_Users<User>>();
+
         bool isBusy = false;
         public bool IsBusy
         {

@@ -19,7 +19,7 @@ namespace NT_GreenSecure
 
         public async Task<bool> AuthenticateAsync(string email, string plainTextPassword)
         {
-            User user = await _daoUser.GetUserByEmailAsync(email);
+           var (user, error) = await _daoUser.GetUserByEmailAsync(email);
 
             if (user == null)
             {

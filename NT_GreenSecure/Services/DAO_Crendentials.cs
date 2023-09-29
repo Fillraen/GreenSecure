@@ -14,46 +14,20 @@ using System.Net.Http.Headers;
 
 namespace NT_GreenSecure.Services
 {//https://www.youtube.com/watch?v=aQAhlxKpOak
-    public class DAO_Credentials : IDao_Credentials
+    public class DAO_Credentials : IDao_Credentials<Credentials>
     {
         private readonly string baseUrl = "http://10.0.2.2:8089/credentials";
         private readonly HttpClient _client;
+        private int userId;
         public DAO_Credentials()
         {
             _client = new HttpClient();
-
+            userId = Preferences.Get("IdUser", -1);
         }
-        /*
-        public async Task<(User Result, string Error)> GetUserByEmailAsync(string email)
-        {
-            Uri uri = new Uri("http://10.0.2.2:8089/users/user/by-email");
-            try
-            {
-                var request = new HttpRequestMessage();
-                request.RequestUri = uri;
-                request.Method = HttpMethod.Get;
-                request.Headers.Add("Email", email);
 
-                HttpResponseMessage response = await _client.SendAsync(request);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var user = JsonConvert.DeserializeObject<User>(responseContent);
-                    return (user, null);
-                }
-                return (null, $"Error: {response.ReasonPhrase}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in GetUserByEmailAsync: {ex.Message}");
-                return (null, $"Exception: {ex.Message}");
-            }
-        }
-        */
         public async Task<(ObservableCollection<Credentials> Result, string Error)> GetAllCredentialsAsync()
         {
-            Uri uri = new Uri(baseUrl);
+            Uri uri = new Uri($"{baseUrl}/user/{userId}");
             try
             {
                 HttpResponseMessage response = await _client.GetAsync(uri).ConfigureAwait(false);

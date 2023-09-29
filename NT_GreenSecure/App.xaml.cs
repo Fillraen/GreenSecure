@@ -12,6 +12,8 @@ namespace NT_GreenSecure
         public App()
         {
             InitializeComponent();
+            DependencyService.Register<DAO_Credentials>();
+            DependencyService.Register<DAO_Users>();
             MainPage = new AppShell();
             // Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(48).Ticks);
             // Récupération de l'IdUser et de la date d'expiration du token

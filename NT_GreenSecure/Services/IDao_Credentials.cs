@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace NT_GreenSecure.Services
 {
-    public interface IDao_Credentials
+    public interface IDao_Credentials<T>
     {
-        Task<(ObservableCollection<Credentials> Result, string Error)> GetAllCredentialsAsync();
-        Task<(Credentials Result, string Error)> GetCredentialByIdAsync(int id);
-        Task<string> AddCredentialAsync(Credentials credential);
-        Task<string> UpdateCredentialAsync(Credentials credential);
+        Task<(ObservableCollection<T> Result, string Error)> GetAllCredentialsAsync();
+        Task<(T Result, string Error)> GetCredentialByIdAsync(int id);
+        Task<string> AddCredentialAsync(T credential);
+        Task<string> UpdateCredentialAsync(T credential);
         Task<string> DeleteCredentialAsync(int id);
     }
 }

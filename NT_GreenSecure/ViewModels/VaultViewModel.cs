@@ -5,6 +5,7 @@ using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,17 +29,12 @@ namespace NT_GreenSecure.ViewModels
             set => SetProperty(ref _credentials, value);
         }
 
-        private readonly DAO_Credentials _daoCredentials;
-        private readonly DAO_Users _daoUsers;
-
         private int userId;
         private User connectedUser;
 
         public VaultViewModel()
         {
             Title = "Vault";
-            _daoCredentials = new DAO_Credentials();
-            _daoUsers = new DAO_Users();
             userId = Preferences.Get("IdUser", -1);
 
             CopyPasswordCommand = new Command<int>(CopyPassword);
@@ -47,9 +43,27 @@ namespace NT_GreenSecure.ViewModels
 
             Task.Run(async () =>
             {
-                connectedUser = await _daoUsers.GetUserByIdAsync(userId);
-                LoadCredentialsAsync();
+                try
+                {
+                    var (user, error) = await DaoUsers.GetUserByIdAsync(userId);
+                    if (user != null)
+                    {
+                        connectedUser = user;
+                        LoadCredentialsAsync();
+                    }
+                    else
+                    {
+                        // Gérez l'erreur ici si nécessaire, par exemple en affichant un message à l'utilisateur.
+                        Debug.WriteLine($"Error loading user: {error}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error loading user: {ex.Message}");
+                }
+                
             });
+
         }
 
         private async void OpenCredentialDetail(Credentials selectedCredential)
@@ -60,7 +74,7 @@ namespace NT_GreenSecure.ViewModels
 
         private async Task LoadCredentialsAsync()
         {
-            var (credentialsList, error) = await _daoCredentials.GetAllCredentialsAsync();
+            var (credentialsList, error) = await DaoCredentials.GetAllCredentialsAsync();
             if (error != null)
             {
                 await App.Current.MainPage.DisplayAlert("Error", error, "OK");
@@ -99,7 +113,7 @@ namespace NT_GreenSecure.ViewModels
             var userResponse = await App.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete this?", "Yes", "No");
             if (userResponse)
             {
-                var message = await _daoCredentials.DeleteCredentialAsync(id);
+                var message = await DaoCredentials.DeleteCredentialAsync(id);
                 if (message == null)
                 {
                     await App.Current.MainPage.DisplayAlert("Error", message, "OK");

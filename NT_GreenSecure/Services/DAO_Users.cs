@@ -5,40 +5,137 @@ using System.Threading.Tasks;
 using NT_GreenSecure.Models;
 using System;
 using System.Reflection;
+using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Text;
 
 namespace NT_GreenSecure.Services
 {
-    public class DAO_Users
+    public class DAO_Users : IDao_Users<User>
     {
+        private readonly string baseUrl = "http://10.0.2.2:8089/users";
+        private readonly HttpClient _client;
         public DAO_Users()
         {
-
+            _client = new HttpClient();
         }
-        public async Task<List<User>> GetAllUsersAsync()
-        {
-            var assembly = IntrospectionExtensions.GetTypeInfo(typeof(App)).Assembly;
-            Stream stream = assembly.GetManifestResourceStream("NT_GreenSecure.CustomData.users.json");
 
-            using (StreamReader reader = new StreamReader(stream))
+        public async Task<(ObservableCollection<User> Result, string Error)> GetAllUsersAsync()
+        {
+            Uri uri = new Uri(baseUrl);
+            try
             {
-                string json = await reader.ReadToEndAsync();
-                List<User> users = JsonConvert.DeserializeObject<List<User>>(json);
-                return users;
+                HttpResponseMessage response = await _client.GetAsync(uri).ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var users = JsonConvert.DeserializeObject<ObservableCollection<User>>(content);
+                    
+                    return (users, null);
+                }
+                return (null, $"Error: {response.ReasonPhrase}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetCredentialsAsync: {ex.Message}");
+                return (null, $"Exception: {ex.Message}");
             }
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<(User Result, string Error)> GetUserByIdAsync(int id)
         {
-            List<User> users = await GetAllUsersAsync();
-            User user = users.Find(u => u.Email == email);
-            return user;
+            Uri uri = new Uri($"{baseUrl}/{id}");
+            try
+            {
+                HttpResponseMessage response = await _client.GetAsync(uri).ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var user = JsonConvert.DeserializeObject<User>(content);
+                    return (user, null);
+                }
+                return (null, $"Error: {response.ReasonPhrase}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetCredentialByIdAsync: {ex.Message}");
+                return (null, $"Exception: {ex.Message}");
+            }
+        }
+        public async Task<(User Result, string Error)> GetUserByEmailAsync(string email)
+        {
+            Uri uri = new Uri($"{baseUrl}/user/by-email");
+            try
+            {
+                var request = new HttpRequestMessage();
+                request.RequestUri = uri;
+                request.Method = HttpMethod.Get;
+                request.Headers.Add("Email", email);
+
+                HttpResponseMessage response = await _client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var user = JsonConvert.DeserializeObject<User>(responseContent);
+                    return (user, null);
+                }
+                return (null, $"Error: {response.ReasonPhrase}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetUserByEmailAsync: {ex.Message}");
+                return (null, $"Exception: {ex.Message}");
+            }
+        }
+        public async Task<string> AddUserAsync(User user)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+            try
+            {
+                HttpResponseMessage response = await _client.PostAsync(baseUrl, content);
+                if (!response.IsSuccessStatusCode)
+                    return $"Error: {response.ReasonPhrase}";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AddCredentialAsync: {ex.Message}");
+                return $"Exception: {ex.Message}";
+            }
+            return null;
         }
 
-        public async Task<User> GetUserByIdAsync(int id){
-            List<User> users = await GetAllUsersAsync();
-            User user = users.Find(u => u.UserId == id);
-            return user;
-        }   
-    }
+        public async Task<string> UpdateUserAsync(User user)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
+            try
+            {
+                HttpResponseMessage response = await _client.PutAsync($"{baseUrl}/{user.UserId}", content);
+                if (!response.IsSuccessStatusCode)
+                    return $"Error: {response.ReasonPhrase}";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateCredentialAsync: {ex.Message}");
+                return $"Exception: {ex.Message}";
+            }
+            return null;
+        }
 
+        public async Task<string> DeleteUserAsync(int id)
+        {
+            try
+            {
+                HttpResponseMessage response = await _client.DeleteAsync($"{baseUrl}/{id}");
+                if (!response.IsSuccessStatusCode)
+                    return $"Error: {response.ReasonPhrase}";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteCredentialAsync: {ex.Message}");
+                return $"Exception: {ex.Message}";
+            }
+            return null;
+        }
+    }
 }

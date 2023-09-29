@@ -71,7 +71,8 @@ namespace NT_GreenSecure.Models
 
         public void setUrlIcon(string url)
         {
-            urlIcon = "https://www.google.com/s2/favicons?domain=" + url;
+            //urlIcon = "https://www.google.com/s2/favicons?domain=" + url;
+            urlIcon = $"https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url={url}&size=256";
         }
     }
 }

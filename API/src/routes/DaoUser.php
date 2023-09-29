@@ -77,8 +77,7 @@ return function (App $app) {
             }
         });
 
-
-// Sélectionner un utilisateur par ID
+        // Sélectionner un utilisateur par ID
         $group->get('/{id}', function (Request $request, Response $response, array $args) {
 
             $id = $args['id'];
@@ -129,7 +128,8 @@ return function (App $app) {
                 return $response->withHeader('content-type', 'application/json')->withStatus(500);
             }
         });
-// Mettre à jour un utilisateur par ID
+
+        // Mettre à jour un utilisateur par ID
         $group->put('/{id}', function (Request $request, Response $response, array $args) {
 
             $input = $request->getParsedBody();
@@ -164,7 +164,8 @@ return function (App $app) {
                 return $response->withHeader('content-type', 'application/json')->withStatus(500);
             }
         });
-// Supprimer un utilisateur par ID
+
+        // Supprimer un utilisateur par ID
         $group->delete('/{id}', function (Request $request, Response $response, array $args) {
 
             $id = $args['id'];

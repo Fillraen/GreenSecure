@@ -61,7 +61,7 @@ return function (App $app) {
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();
-                $credential = $stmt->fetchAll(PDO::FETCH_OBJ);
+                $credential = $stmt->fetch(PDO::FETCH_OBJ);
                 $db = null;
                 $response->getBody()->write(json_encode($credential));
                 return $response->withHeader('content-type', 'application/json')->withStatus(200);
