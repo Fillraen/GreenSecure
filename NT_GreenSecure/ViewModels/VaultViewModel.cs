@@ -53,7 +53,6 @@ namespace NT_GreenSecure.ViewModels
                     }
                     else
                     {
-                        // Gérez l'erreur ici si nécessaire, par exemple en affichant un message à l'utilisateur.
                         Debug.WriteLine($"Error loading user: {error}");
                     }
                 }
@@ -61,8 +60,8 @@ namespace NT_GreenSecure.ViewModels
                 {
                     Debug.WriteLine($"Error loading user: {ex.Message}");
                 }
-                
-            });
+            }).Wait();
+
 
         }
 
@@ -114,7 +113,7 @@ namespace NT_GreenSecure.ViewModels
             if (userResponse)
             {
                 var message = await DaoCredentials.DeleteCredentialAsync(id);
-                if (message == null)
+                if (message != "ok")
                 {
                     await App.Current.MainPage.DisplayAlert("Error", message, "OK");
                     return;
@@ -123,7 +122,9 @@ namespace NT_GreenSecure.ViewModels
                 {
                     var credentialToRemove = _credentials.FirstOrDefault(c => c.Id == id);
                     if (credentialToRemove != null)
+                    {
                         Credentials.Remove(credentialToRemove);
+                    }
                 }
             }
         }

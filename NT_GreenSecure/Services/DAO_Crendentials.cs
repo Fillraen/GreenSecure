@@ -80,7 +80,10 @@ namespace NT_GreenSecure.Services
             {
                 HttpResponseMessage response = await _client.PostAsync(baseUrl, content);
                 if (!response.IsSuccessStatusCode)
+                {
                     return $"Error: {response.ReasonPhrase}";
+                }
+                    
             }
             catch (Exception ex)
             {
@@ -97,7 +100,9 @@ namespace NT_GreenSecure.Services
             {
                 HttpResponseMessage response = await _client.PutAsync($"{baseUrl}/{credential.Id}", content);
                 if (!response.IsSuccessStatusCode)
+                {
                     return $"Error: {response.ReasonPhrase}";
+                }
             }
             catch (Exception ex)
             {
@@ -113,14 +118,17 @@ namespace NT_GreenSecure.Services
             {
                 HttpResponseMessage response = await _client.DeleteAsync($"{baseUrl}/{id}");
                 if (!response.IsSuccessStatusCode)
+                {
                     return $"Error: {response.ReasonPhrase}";
+                }
+                    
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in DeleteCredentialAsync: {ex.Message}");
                 return $"Exception: {ex.Message}";
             }
-            return null;
+            return "ok";
         }
     }
 }
