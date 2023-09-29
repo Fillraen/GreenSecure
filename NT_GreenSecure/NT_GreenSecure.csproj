@@ -7,16 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="CustomData\credentials.json" />
-    <None Remove="CustomData\users.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="CustomData\credentials.json" />
-    <EmbeddedResource Include="CustomData\users.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />

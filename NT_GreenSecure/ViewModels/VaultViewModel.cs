@@ -1,5 +1,6 @@
 ﻿using NT_GreenSecure.Models;
 using NT_GreenSecure.Services;
+using NT_GreenSecure.ViewModels.Popup;
 using NT_GreenSecure.Views.Popup;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -28,7 +29,14 @@ namespace NT_GreenSecure.ViewModels
             get => _credentials;
             set => SetProperty(ref _credentials, value);
         }
+        private bool _isRefreshing;
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
 
+        public ICommand LoadDataCommand { get; }
         private int userId;
         private User connectedUser;
 
@@ -40,6 +48,7 @@ namespace NT_GreenSecure.ViewModels
             CopyPasswordCommand = new Command<int>(CopyPassword);
             DeletePasswordCommand = new Command<int>(DeletePassword);
             OpenCredentialDetailCommand = new Command<Credentials>(OpenCredentialDetail);
+            LoadDataCommand = new Command(async () => await LoadData());
 
             Task.Run(async () =>
             {
@@ -49,7 +58,7 @@ namespace NT_GreenSecure.ViewModels
                     if (user != null)
                     {
                         connectedUser = user;
-                        LoadCredentialsAsync();
+                        await LoadData();
                     }
                     else
                     {
@@ -62,7 +71,18 @@ namespace NT_GreenSecure.ViewModels
                 }
             }).Wait();
 
+            
+            MessagingCenter.Subscribe<CredentialDetailViewModel>(this, "RefreshList", async (sender) =>
+            {
+                await LoadData();
+            });
+        }
 
+        private async Task LoadData()
+        {
+            IsRefreshing = true;
+            await LoadCredentialsAsync(); // Supposer que c'est la méthode qui charge vos données.
+            IsRefreshing = false;
         }
 
         private async void OpenCredentialDetail(Credentials selectedCredential)

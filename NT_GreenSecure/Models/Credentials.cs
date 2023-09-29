@@ -32,7 +32,7 @@ namespace NT_GreenSecure.Models
         public void SetPassword(string plainTextPassword, string EncryptionKey, string EncryptionIV)
         {
             EncryptedPassword = EncryptPassword(plainTextPassword, EncryptionKey, EncryptionIV);
-            EvaluatePasswordComplexity(plainTextPassword);
+            Complexity = EvaluatePasswordComplexity(plainTextPassword);
         }
 
         public string GetActualPassword(string EncryptionKey, string EncryptionIV)

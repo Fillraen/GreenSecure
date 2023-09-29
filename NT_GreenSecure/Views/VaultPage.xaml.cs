@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using NT_GreenSecure.ViewModels;
+using NT_GreenSecure.ViewModels.Popup;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,6 +18,10 @@ namespace NT_GreenSecure.Views
         {
             InitializeComponent();
         }
-
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            MessagingCenter.Unsubscribe<CredentialDetailViewModel>(this, "RefreshList");
+        }
     }
 }
