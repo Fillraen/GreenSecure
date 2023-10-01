@@ -27,12 +27,13 @@
             </Style>
             <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
             <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
+            <Style TargetType="ShellItem" BasedOn="{StaticResource BaseStyle}" />
         </ResourceDictionary>
     </Shell.Resources>
 
     <controls:TodoTabBar>
         <controls:TodoTabBar.LargeTab>
-            <Tab Title="Add" Icon="icon_add_password.png">
+            <Tab  Icon="icon_add_password.png">
                 <ShellContent ContentTemplate="{DataTemplate local:HomePage}" />
             </Tab>
         </controls:TodoTabBar.LargeTab>
@@ -40,13 +41,13 @@
         <Tab Icon="icon_home.png">
             <ShellContent ContentTemplate="{DataTemplate local:HomePage}" />
         </Tab>
-        <Tab Title="" Icon="icon_vault.png">
+        <Tab Icon="icon_vault.png">
             <ShellContent ContentTemplate="{DataTemplate local:VaultPage}" />
         </Tab>
-        <Tab Title="" Icon="icon_settings.png">
+        <Tab Icon="icon_settings.png">
             <ShellContent ContentTemplate="{DataTemplate local:SettingsPage}" />
         </Tab>
-        <Tab Title="" Icon="icon_logout.png">
+        <Tab Icon="icon_logout.png">
             <ShellContent ContentTemplate="{DataTemplate local:LoginPage}" />
         </Tab>
     </controls:TodoTabBar>

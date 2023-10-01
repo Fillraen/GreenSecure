@@ -7,6 +7,7 @@ using Android.Widget;
 using NT_GreenSecure.Droid.Renderers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Xamarin.Forms;
@@ -18,8 +19,8 @@ namespace NT_GreenSecure.Droid.Renderers
     {
         public TodoShellRenderer(Context context) : base(context)
         {
-
         }
+
         protected override IShellItemRenderer CreateShellItemRenderer(ShellItem shellItem)
         {
             return new TodoShellItemRenderer(this);

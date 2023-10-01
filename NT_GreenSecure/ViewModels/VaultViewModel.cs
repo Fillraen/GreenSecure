@@ -116,16 +116,32 @@ namespace NT_GreenSecure.ViewModels
                     await LoadData();
                 }).Wait();
             });
+            MessagingCenter.Subscribe<AddPasswordViewModel>(this, "RefreshList", async (sender) =>
+            {
+                Task.Run(async () =>
+                {
+                    await LoadData();
+                }).Wait();
+            });
         }
 
         private async Task LoadData()
         {
             IsRefreshing = true;
             await LoadCredentialsAsync(); // Charge toutes les données
-            FilterCredentials(); // Filtre les données en fonction de SearchText
+            FilterCredentials(); // Filtre les données en fonction de SearchText et SelectedFilter
             IsRefreshing = false;
         }
-
+        private async Task LoadCredentialsAsync()
+        {
+            var (credentialsList, error) = await DaoCredentials.GetAllCredentialsAsync();
+            if (error != null)
+            {
+                await App.Current.MainPage.DisplayAlert("Error", error, "OK");
+                return;
+            }
+            AllCredentials = new ObservableCollection<Credentials>(credentialsList);
+        }
 
         private void FilterCredentials()
         {
@@ -162,16 +178,7 @@ namespace NT_GreenSecure.ViewModels
             await PopupNavigation.Instance.PushAsync(page); 
         }
 
-        private async Task LoadCredentialsAsync()
-        {
-            var (credentialsList, error) = await DaoCredentials.GetAllCredentialsAsync();
-            if (error != null)
-            {
-                await App.Current.MainPage.DisplayAlert("Error", error, "OK");
-                return;
-            }
-            AllCredentials = new ObservableCollection<Credentials>(credentialsList);
-        }
+        
 
 
         public async void CopyPassword(int id)

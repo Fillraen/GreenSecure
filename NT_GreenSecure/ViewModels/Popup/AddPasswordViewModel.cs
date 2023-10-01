@@ -131,29 +131,29 @@ namespace NT_GreenSecure.ViewModels.Popup
             IsPasswordVisible = !IsPasswordVisible;
         }
 
-        private async Task SaveNewCredential()
-        {
-            try
+            private async Task SaveNewCredential()
             {
-               var error = await DaoCredentials.AddCredentialAsync(NewCredential);
-               if (string.IsNullOrEmpty(error))
-               {
-                    // Fermer la popup après une mise à jour réussie
-                    MessagingCenter.Send(this, "RefreshList");
-                    await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAsync();
-               }
-               else
-               {
-                   // Afficher l'erreur retournée à l'utilisateur
-                   await Application.Current.MainPage.DisplayAlert("Erreur", $"Erreur durant l'ajout : {error}", "OK");
-               }
+                try
+                {
+                   var error = await DaoCredentials.AddCredentialAsync(NewCredential);
+                   if (string.IsNullOrEmpty(error))
+                   {
+                        // Fermer la popup après une mise à jour réussie
+                        MessagingCenter.Send(this, "RefreshList");
+                        await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAsync();
+                   }
+                   else
+                   {
+                       // Afficher l'erreur retournée à l'utilisateur
+                       await Application.Current.MainPage.DisplayAlert("Erreur", $"Erreur durant l'ajout : {error}", "OK");
+                   }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error saving new credential: {ex.Message}");
+                    await Application.Current.MainPage.DisplayAlert("Exception", $"Une exception s'est produite : {ex.Message}", "OK");
+                }
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error saving new credential: {ex.Message}");
-                await Application.Current.MainPage.DisplayAlert("Exception", $"Une exception s'est produite : {ex.Message}", "OK");
-            }
-        }
 
         private async Task CancelAddCredential()
         {
