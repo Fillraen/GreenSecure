@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Page de code 1 - BoolToImageSourceConverter.cs
+// Ce convertisseur transforme un booléen en une source d'image Xamarin.Forms.
+// Si la valeur d'entrée est true, il renvoie l'icône pour afficher le mot de passe, sinon, l'icône pour masquer le mot de passe.
+// Par défaut, il renvoie l'icône pour masquer le mot de passe.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -22,5 +27,4 @@ namespace NT_GreenSecure.Converter
             throw new NotImplementedException();
         }
     }
-
 }

@@ -13,8 +13,10 @@ namespace NT_GreenSecure.ViewModels.Popup
 {
     public class CredentialDetailViewModel : BaseViewModel
     {
+        // Propriété pour stocker le Credential sélectionné
         public Credentials SelectedCredential { get; set; }
 
+        // Commandes pour les boutons de sauvegarde, suppression et basculement de mot de passe
         public ICommand SaveCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
         public ICommand TogglePasswordCommand { get; set; }
@@ -24,6 +26,7 @@ namespace NT_GreenSecure.ViewModels.Popup
 
         #region Properties
 
+        // Propriété pour vérifier si "Site Web" est sélectionné
         public bool IsWebsiteSelected
         {
             get => SelectedCredential.Domain == "Site Web";
@@ -42,12 +45,13 @@ namespace NT_GreenSecure.ViewModels.Popup
             }
         }
 
+        // Propriété pour vérifier si "Application" est sélectionné (complément de "Site Web")
         public bool IsAppSelected
         {
             get => !IsWebsiteSelected; // C'est le complément logique de IsWebsiteSelected
         }
 
-
+        // Propriété pour gérer la visibilité du mot de passe
         private bool _isPasswordVisible;
         public bool IsPasswordVisible
         {
@@ -55,6 +59,7 @@ namespace NT_GreenSecure.ViewModels.Popup
             set => SetProperty(ref _isPasswordVisible, value);
         }
 
+        // Propriété pour stocker le mot de passe déchiffré
         private string _decryptedPassword;
         public string DecryptedPassword
         {
@@ -63,14 +68,15 @@ namespace NT_GreenSecure.ViewModels.Popup
             {
                 if (SetProperty(ref _decryptedPassword, value))
                 {
+                    // Mettre à jour le mot de passe chiffré dans le Credential
                     SelectedCredential.SetPassword(value, connectedUser.EncryptionKey, connectedUser.EncryptionIV);
-                    Complexity = SelectedCredential.Complexity; // Update ViewModel Property
+                    Complexity = SelectedCredential.Complexity; // Mettre à jour la propriété de complexité
                     OnPropertyChanged(nameof(PasswordStrength));
                 }
-
             }
         }
-        // Propriété pour la force du mot de passe
+
+        // Propriété pour afficher la force du mot de passe
         public string PasswordStrength
         {
             get
@@ -80,21 +86,27 @@ namespace NT_GreenSecure.ViewModels.Popup
                 return "Fort";
             }
         }
+
+        // Propriété pour stocker la complexité du mot de passe
         public int Complexity
         {
             get => SelectedCredential.Complexity;
             set
             {
                 SelectedCredential.Complexity = value;
-                OnPropertyChanged(nameof(Complexity)); // Notify Change
+                OnPropertyChanged(nameof(Complexity)); // Notifier le changement
             }
         }
         #endregion
 
+        // Constructeur du ViewModel
         public CredentialDetailViewModel(Credentials selectedCredential)
         {
-            Title = "Credential Detail";
+            Title = "Credential Detail"; // Titre de la vue
+
             userId = Preferences.Get("IdUser", -1);
+
+            // Récupération de l'utilisateur connecté
             Task.Run(async () =>
             {
                 try
@@ -124,11 +136,13 @@ namespace NT_GreenSecure.ViewModels.Popup
             DecryptedPassword = selectedCredential.GetActualPassword(connectedUser.EncryptionKey, connectedUser.EncryptionIV);
         }
 
+        // Méthode pour basculer la visibilité du mot de passe
         private void TogglePassword()
         {
             IsPasswordVisible = !IsPasswordVisible;
         }
 
+        // Méthode pour sauvegarder les modifications du Credential
         private async Task SaveCredential()
         {
             try
@@ -155,6 +169,7 @@ namespace NT_GreenSecure.ViewModels.Popup
             }
         }
 
+        // Méthode pour supprimer le Credential
         private async Task DeleteCredentials()
         {
             try
@@ -180,7 +195,6 @@ namespace NT_GreenSecure.ViewModels.Popup
                 Debug.WriteLine($"Error deleting credential: {ex.Message}");
                 await Application.Current.MainPage.DisplayAlert("Exception", $"Une exception s'est produite : {ex.Message}", "OK");
             }
-            
         }
     }
 }

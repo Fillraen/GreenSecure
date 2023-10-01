@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Page de code 2 - ComplexityToProgressConverter.cs
+// Ce convertisseur transforme un entier (représentant la complexité) en une valeur entre 0 et 1.
+// Il divise simplement la complexité par 100 pour obtenir la valeur entre 0 et 1.
+// Si la conversion échoue, il renvoie 0 par défaut.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -22,5 +27,4 @@ namespace NT_GreenSecure.Converter
             throw new NotImplementedException(); // Nous n'implémentons pas la conversion inverse dans ce cas.
         }
     }
-
 }

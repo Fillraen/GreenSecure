@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Page de code 3 - InverseBooleanConverter.cs
+// Ce convertisseur inverse simplement une valeur booléenne.
+// Si la valeur d'entrée est true, il renvoie false, et vice versa.
+// Si la conversion échoue, il renvoie false par défaut.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -26,5 +31,4 @@ namespace NT_GreenSecure.Converter
             return false;
         }
     }
-
 }

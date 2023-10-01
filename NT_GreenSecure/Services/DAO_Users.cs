@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿// Classe DAO_Users - Gère les opérations liées aux utilisateurs
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using NT_GreenSecure.Models;
-using System;
 using System.Reflection;
 using System.Collections.ObjectModel;
 using System.Net.Http;
@@ -13,13 +14,15 @@ namespace NT_GreenSecure.Services
 {
     public class DAO_Users : IDao_Users<User>
     {
-        private readonly string baseUrl = "http://10.0.2.2:8089/users";
+        private readonly string baseUrl = "http://10.0.2.2:8089/users"; // URL de base pour les opérations CRUD sur les utilisateurs
         private readonly HttpClient _client;
+
         public DAO_Users()
         {
-            _client = new HttpClient();
+            _client = new HttpClient(); 
         }
 
+        // Méthode pour obtenir tous les utilisateurs
         public async Task<(ObservableCollection<User> Result, string Error)> GetAllUsersAsync()
         {
             Uri uri = new Uri(baseUrl);
@@ -30,18 +33,19 @@ namespace NT_GreenSecure.Services
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     var users = JsonConvert.DeserializeObject<ObservableCollection<User>>(content);
-                    
-                    return (users, null);
+
+                    return (users, null); // Retourne la collection d'utilisateurs et aucune erreur
                 }
-                return (null, $"Error: {response.ReasonPhrase}");
+                return (null, $"Error: {response.ReasonPhrase}"); // Retourne une erreur si la requête n'a pas réussi
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in GetCredentialsAsync: {ex.Message}");
-                return (null, $"Exception: {ex.Message}");
+                return (null, $"Exception: {ex.Message}"); // Retourne une erreur en cas d'exception
             }
         }
 
+        // Méthode pour obtenir un utilisateur par son ID
         public async Task<(User Result, string Error)> GetUserByIdAsync(int id)
         {
             Uri uri = new Uri($"{baseUrl}/{id}");
@@ -62,6 +66,8 @@ namespace NT_GreenSecure.Services
                 return (null, $"Exception: {ex.Message}");
             }
         }
+
+        // Méthode pour obtenir un utilisateur par son adresse e-mail
         public async Task<(User Result, string Error)> GetUserByEmailAsync(string email)
         {
             Uri uri = new Uri($"{baseUrl}/user/by-email");
@@ -88,6 +94,8 @@ namespace NT_GreenSecure.Services
                 return (null, $"Exception: {ex.Message}");
             }
         }
+
+        // Méthode pour ajouter un utilisateur
         public async Task<string> AddUserAsync(User user)
         {
             var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
@@ -105,6 +113,7 @@ namespace NT_GreenSecure.Services
             return null;
         }
 
+        // Méthode pour mettre à jour un utilisateur
         public async Task<string> UpdateUserAsync(User user)
         {
             var content = new StringContent(JsonConvert.SerializeObject(user), Encoding.UTF8, "application/json");
@@ -122,6 +131,7 @@ namespace NT_GreenSecure.Services
             return null;
         }
 
+        // Méthode pour supprimer un utilisateur
         public async Task<string> DeleteUserAsync(int id)
         {
             try

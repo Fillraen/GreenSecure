@@ -10,38 +10,40 @@ namespace NT_GreenSecure.Models
 {
     public class Credentials : AesEncryption
     {
+        // Propriétés pour stocker les informations de connexion
         public int Id { get; set; }
         public int IdUser { get; set; }
         public string Username { get; set; }
-        public string EmailAddress { get; set; } // Email address associated with the credential
-        public string Url { get; set; } // URL of the website or app
+        public string EmailAddress { get; set; }
+        public string Url { get; set; }
         public string Name { get; set; }
-        public string EncryptedPassword { get; set; } // Encrypted Password
-        
-        public string Domain { get; set; } // Website or App the credential is for
-        public string Category { get; set; } // E.g., Social Media, Banking
-        public string DateCreated { get; set; } // When was this credential created
-        public string LastModified { get; set; } // When was this credential last modified
+        public string EncryptedPassword { get; set; }
+        public string Domain { get; set; }
+        public string Category { get; set; }
+        public string DateCreated { get; set; }
+        public string LastModified { get; set; }
         public int Complexity { get; set; }
-
         public string urlIcon { get; set; }
 
-        public Credentials (){
+
+        public Credentials()
+        {
         }
 
+        // Méthode pour définir le mot de passe enregistré et calculer sa complexité
         public void SetPassword(string plainTextPassword, string EncryptionKey, string EncryptionIV)
         {
             EncryptedPassword = EncryptPassword(plainTextPassword, EncryptionKey, EncryptionIV);
             Complexity = EvaluatePasswordComplexity(plainTextPassword);
         }
 
+        // Méthode pour obtenir le mot de passe en clair à partir de l'encryption
         public string GetActualPassword(string EncryptionKey, string EncryptionIV)
         {
-
             return DecryptPassword(EncryptedPassword, EncryptionKey, EncryptionIV);
         }
 
-        
+
         public int EvaluatePasswordComplexity(string password)
         {
             int complexityScore = 0;
@@ -69,9 +71,9 @@ namespace NT_GreenSecure.Models
             return complexityScore;
         }
 
+        // Méthode pour définir l'icône d'URL associée aux informations de connexion
         public void setUrlIcon(string url)
         {
-            //urlIcon = "https://www.google.com/s2/favicons?domain=" + url;
             urlIcon = $"https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url={url}&size=256";
         }
     }

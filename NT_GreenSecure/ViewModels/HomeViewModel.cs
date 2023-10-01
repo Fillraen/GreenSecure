@@ -3,21 +3,21 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+// ...
+using Rg.Plugins.Popup.Services;
+using NT_GreenSecure.ViewModels.Popup;
+using NT_GreenSecure.Views.Popup;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using NT_GreenSecure.ViewModels.Popup;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using NT_GreenSecure.Views.Popup;
-using Rg.Plugins.Popup.Services;
-using System.Net;
 
 namespace NT_GreenSecure.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
+        // Commandes pour charger les données, ouvrir les détails du Credential, copier le mot de passe et supprimer le mot de passe
         public ICommand LoadDataCommand { get; set; }
         public ICommand OpenCredentialDetailCommand { get; set; }
         public ICommand CopyPasswordCommand { get; set; }
@@ -25,19 +25,23 @@ namespace NT_GreenSecure.ViewModels
 
         #region Properties
 
+        // Propriété pour stocker l'utilisateur connecté
         private User _user;
         public User connectedUser
         {
-           get => _user;
-           set => SetProperty(ref _user, value);
+            get => _user;
+            set => SetProperty(ref _user, value);
         }
 
+        // Propriété pour stocker les nouveaux Credentials
         private ObservableCollection<Credentials> _newCredentials;
         public ObservableCollection<Credentials> NewCredentials
         {
             get => _newCredentials;
             set => SetProperty(ref _newCredentials, value);
         }
+
+        // Propriété pour indiquer si le rafraîchissement est en cours
         private bool _isRefreshing;
         public bool IsRefreshing
         {
@@ -45,26 +49,31 @@ namespace NT_GreenSecure.ViewModels
             set => SetProperty(ref _isRefreshing, value);
         }
 
+        // Propriété pour stocker tous les Credentials
         private ObservableCollection<Credentials> _allCredentials;
-
         public ObservableCollection<Credentials> AllCredentials
         {
             get => _allCredentials;
             set => SetProperty(ref _allCredentials, value);
         }
 
+        // Propriété pour stocker la complexité moyenne
         private int _averageComplexity;
         public int AverageComplexity
         {
             get => _averageComplexity;
             set => SetProperty(ref _averageComplexity, value);
         }
+
+        // Propriété pour stocker le nombre total de mots de passe
         private int _totalPassword;
         public int TotalPassword
         {
             get => _totalPassword;
             set => SetProperty(ref _totalPassword, value);
         }
+
+        // Propriété pour stocker le nombre de mots de passe réutilisés
         private int _reusedPassword;
         public int ReusedPassword
         {
@@ -72,6 +81,7 @@ namespace NT_GreenSecure.ViewModels
             set => SetProperty(ref _reusedPassword, value);
         }
 
+        // Dictionnaire pour suivre les comptes de mots de passe réutilisés
         private Dictionary<string, int> _passwordCounts = new Dictionary<string, int>();
 
         #endregion
@@ -80,13 +90,17 @@ namespace NT_GreenSecure.ViewModels
 
         public HomeViewModel()
         {
-            Title = "Home";
+            Title = "Home"; // Titre de la vue
+
             userId = Preferences.Get("IdUser", -1);
+
+            // Commandes pour copier et supprimer les mots de passe
             CopyPasswordCommand = new Command<int>(CopyPassword);
             DeletePasswordCommand = new Command<int>(DeletePassword);
             OpenCredentialDetailCommand = new Command<Credentials>(OpenCredentialDetail);
             LoadDataCommand = new Command(async () => await LoadData());
 
+            // Récupération de l'utilisateur connecté
             Task.Run(async () =>
             {
                 try
@@ -108,23 +122,25 @@ namespace NT_GreenSecure.ViewModels
                 }
             }).Wait();
 
+            // Abonnements aux messages de rafraîchissement des listes depuis les popups
             MessagingCenter.Subscribe<CredentialDetailViewModel>(this, "RefreshList", async (sender) =>
-               {
-               Task.Run(async () =>
-               {
-               await LoadData();
-               }).Wait();
+            {
+                Task.Run(async () =>
+                {
+                    await LoadData();
+                }).Wait();
             });
-               
+
             MessagingCenter.Subscribe<AddPasswordViewModel>(this, "RefreshList", async (sender) =>
-               {
-               Task.Run(async () =>
-               {
-               await LoadData();
-               }).Wait();
+            {
+                Task.Run(async () =>
+                {
+                    await LoadData();
+                }).Wait();
             });
         }
 
+        // Méthode pour charger les données
         private async Task LoadData()
         {
             IsRefreshing = true;
@@ -133,6 +149,7 @@ namespace NT_GreenSecure.ViewModels
             IsRefreshing = false;
         }
 
+        // Méthode pour charger les Credentials depuis la base de données
         private async Task LoadCredentialsAsync()
         {
             var (credentialsList, error) = await DaoCredentials.GetAllCredentialsAsync();
@@ -144,18 +161,19 @@ namespace NT_GreenSecure.ViewModels
             AllCredentials = new ObservableCollection<Credentials>(credentialsList);
         }
 
+        // Méthode pour calculer les statistiques (complexité moyenne, total de mots de passe, mots de passe réutilisés, etc.)
         private void CalculateStatistics()
         {
-            // Calculate AverageComplexity
+            // Calcul de la complexité moyenne
             if (AllCredentials.Count > 0)
             {
                 AverageComplexity = AllCredentials.Sum(c => c.Complexity) / AllCredentials.Count;
             }
 
-            // Calculate TotalPassword
+            // Calcul du nombre total de mots de passe
             TotalPassword = AllCredentials.Count;
 
-            // Count and track reused passwords
+            // Compter et suivre les mots de passe réutilisés
             _passwordCounts.Clear();
             foreach (var credential in AllCredentials)
             {
@@ -169,7 +187,7 @@ namespace NT_GreenSecure.ViewModels
                 }
             }
 
-            // Find the largest count (most reused password)
+            // Trouver le nombre maximum (le mot de passe le plus réutilisé)
             int maxCount = 0;
             foreach (var count in _passwordCounts.Values)
             {
@@ -179,21 +197,23 @@ namespace NT_GreenSecure.ViewModels
                 }
             }
 
-            // Set ReusedPassword to the largest count
+            // Définir ReusedPassword sur le nombre maximum
             ReusedPassword = maxCount;
 
-            // Get the 3 newest credentials
+            // Obtenir les 3 nouveaux Credentials
             NewCredentials = new ObservableCollection<Credentials>(AllCredentials
                 .OrderByDescending(c => c.DateCreated)
                 .Take(3));
         }
 
+        // Méthode pour ouvrir les détails d'un Credential
         private async void OpenCredentialDetail(Credentials selectedCredential)
         {
             var page = new CredentialDetailPopup(selectedCredential);
             await PopupNavigation.Instance.PushAsync(page);
         }
 
+        // Méthode pour copier un mot de passe
         public async void CopyPassword(int id)
         {
             var credential = _newCredentials.FirstOrDefault(c => c.Id == id);
@@ -219,6 +239,7 @@ namespace NT_GreenSecure.ViewModels
             }
         }
 
+        // Méthode pour supprimer un mot de passe
         public async void DeletePassword(int id)
         {
             var userResponse = await App.Current.MainPage.DisplayAlert("Confirmation", "Are you sure you want to delete this?", "Yes", "No");
@@ -237,12 +258,11 @@ namespace NT_GreenSecure.ViewModels
                     {
                         AllCredentials.Remove(credentialToRemove);
                         NewCredentials.Remove(credentialToRemove);
-                        // Reinitialize NewCredentials with the three newest credentials
+                        // Réinitialiser NewCredentials avec les trois derniers Credentials
                         CalculateStatistics();
                     }
                 }
             }
         }
-
     }
 }

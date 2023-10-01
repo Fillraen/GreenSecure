@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿// Classe DAO_Credentials - Gère les opérations liées aux informations d'identification (credentials)
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,21 +14,24 @@ using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 
 namespace NT_GreenSecure.Services
-{//https://www.youtube.com/watch?v=aQAhlxKpOak
+{
     public class DAO_Credentials : IDao_Credentials<Credentials>
     {
-        private readonly string baseUrl = "http://10.0.2.2:8089/credentials";
-        private readonly HttpClient _client;
-        private int userId;
+        private readonly string baseUrl = "http://10.0.2.2:8089/credentials"; // URL de base pour les opérations CRUD sur les credentials
+        private readonly HttpClient _client; 
+        private int userId; 
+
         public DAO_Credentials()
         {
             _client = new HttpClient();
+            // Récupération de l'ID de l'utilisateur à partir des préférences
             userId = Preferences.Get("IdUser", -1);
         }
 
+        // Méthode pour obtenir toutes les informations d'identification de l'utilisateur actuel
         public async Task<(ObservableCollection<Credentials> Result, string Error)> GetAllCredentialsAsync()
         {
-            Uri uri = new Uri($"{baseUrl}/user/{userId}");
+            Uri uri = new Uri($"{baseUrl}/user/{userId}"); // URL pour obtenir les credentials de l'utilisateur
             try
             {
                 HttpResponseMessage response = await _client.GetAsync(uri).ConfigureAwait(false);
@@ -36,22 +40,25 @@ namespace NT_GreenSecure.Services
                     var content = await response.Content.ReadAsStringAsync();
                     var credentials = JsonConvert.DeserializeObject<ObservableCollection<Credentials>>(content);
 
-                    // Parcourir chaque Credentials dans la collection
+                    // Parcourt chaque Credentials dans la collection pour appeler setUrlIcon
                     foreach (var credential in credentials)
                     {
-                        credential.setUrlIcon(credential.Url); // Appeler setUrlIcon pour chaque Credentials
+                        credential.setUrlIcon(credential.Url); // Appel de la méthode setUrlIcon pour chaque Credentials
                     }
 
-                    return (credentials, null);
+                    return (credentials, null); // Retourne la collection de credentials et aucune erreur
                 }
-                return (null, $"Error: {response.ReasonPhrase}");
+                return (null, $"Error: {response.ReasonPhrase}"); // Retourne une erreur si la requête n'a pas réussi
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in GetCredentialsAsync: {ex.Message}");
-                return (null, $"Exception: {ex.Message}");
+                return (null, $"Exception: {ex.Message}"); // Retourne une erreur en cas d'exception
             }
         }
+
+        // Méthode pour obtenir un credential par son ID
+
         public async Task<(Credentials Result, string Error)> GetCredentialByIdAsync(int id)
         {
             Uri uri = new Uri($"{baseUrl}/{id}");
@@ -72,7 +79,9 @@ namespace NT_GreenSecure.Services
                 return (null, $"Exception: {ex.Message}");
             }
         }
-        // Post
+
+        // Méthode pour ajouter un credential
+
         public async Task<string> AddCredentialAsync(Credentials credential)
         {
             var content = new StringContent(JsonConvert.SerializeObject(credential), Encoding.UTF8, "application/json");
@@ -83,7 +92,7 @@ namespace NT_GreenSecure.Services
                 {
                     return $"Error: {response.ReasonPhrase}";
                 }
-                    
+
             }
             catch (Exception ex)
             {
@@ -92,7 +101,9 @@ namespace NT_GreenSecure.Services
             }
             return null;
         }
-        // Put
+
+        // Méthode pour mettre à jour un credential
+
         public async Task<string> UpdateCredentialAsync(Credentials credential)
         {
             var content = new StringContent(JsonConvert.SerializeObject(credential), Encoding.UTF8, "application/json");
@@ -111,7 +122,9 @@ namespace NT_GreenSecure.Services
             }
             return null;
         }
-        // Delete
+
+        // Méthode pour supprimer un credential
+
         public async Task<string> DeleteCredentialAsync(int id)
         {
             try
@@ -121,7 +134,7 @@ namespace NT_GreenSecure.Services
                 {
                     return $"Error: {response.ReasonPhrase}";
                 }
-                    
+
             }
             catch (Exception ex)
             {

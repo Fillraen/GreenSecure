@@ -19,7 +19,7 @@ namespace NT_GreenSecure.Views
         }
         private async void Signup_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushPopupAsync(new Popup.RegisterPopup());
+            //await Navigation.PushPopupAsync(new Popup.RegisterPopup());
         }
         private async void Login_Clicked(object sender, EventArgs e)
         {

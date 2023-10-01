@@ -15,6 +15,7 @@ namespace NT_GreenSecure.ViewModels.Popup
 
         #region Properties
 
+        // Propriété permettant de déterminer si le domaine du mot de passe est un site web
         public bool IsWebsiteSelected
         {
             get => NewCredential.Domain == "Site Web";
@@ -33,12 +34,13 @@ namespace NT_GreenSecure.ViewModels.Popup
             }
         }
 
+        // Propriété permettant de déterminer si le domaine du mot de passe est une application
         public bool IsAppSelected
         {
             get => !IsWebsiteSelected; // C'est le complément logique de IsWebsiteSelected
         }
 
-
+        // Propriété pour gérer la visibilité du mot de passe en clair
         private bool _isPasswordVisible;
         public bool IsPasswordVisible
         {
@@ -46,6 +48,7 @@ namespace NT_GreenSecure.ViewModels.Popup
             set => SetProperty(ref _isPasswordVisible, value);
         }
 
+        // Propriété pour le mot de passe en clair
         private string _decryptedPassword;
         public string DecryptedPassword
         {
@@ -55,13 +58,14 @@ namespace NT_GreenSecure.ViewModels.Popup
                 if (SetProperty(ref _decryptedPassword, value))
                 {
                     NewCredential.SetPassword(value, connectedUser.EncryptionKey, connectedUser.EncryptionIV);
-                    Complexity = NewCredential.Complexity; // Update ViewModel Property
+                    Complexity = NewCredential.Complexity; // Met à jour la propriété ViewModel
                     OnPropertyChanged(nameof(PasswordStrength));
                 }
 
             }
         }
-        // Propriété pour la force du mot de passe
+
+        // Propriété pour évaluer la force du mot de passe
         public string PasswordStrength
         {
             get
@@ -71,24 +75,33 @@ namespace NT_GreenSecure.ViewModels.Popup
                 return "Fort";
             }
         }
+
+        // Propriété pour la complexité du mot de passe
         public int Complexity
         {
             get => NewCredential.Complexity;
             set
             {
                 NewCredential.Complexity = value;
-                OnPropertyChanged(nameof(Complexity)); // Notify Change
+                OnPropertyChanged(nameof(Complexity)); // Notifie le changement
             }
         }
+
         #endregion
 
         private int userId;
         private User connectedUser;
 
+        // Commande pour basculer la visibilité du mot de passe
         public ICommand TogglePasswordCommand { get; set; }
 
+        // Objet pour stocker les informations du nouveau mot de passe
         public Credentials NewCredential { get; set; }
+
+        // Commande pour sauvegarder le nouveau mot de passe
         public ICommand SaveCommand { get; set; }
+
+        // Commande pour annuler l'ajout du mot de passe
         public ICommand CancelCommand { get; set; }
 
         public AddPasswordViewModel()
@@ -97,6 +110,8 @@ namespace NT_GreenSecure.ViewModels.Popup
 
             userId = Preferences.Get("IdUser", -1);
             NewCredential.IdUser = userId;
+
+            // Exécute une tâche asynchrone pour charger les informations de l'utilisateur connecté
             Task.Run(async () =>
             {
                 try
@@ -119,42 +134,53 @@ namespace NT_GreenSecure.ViewModels.Popup
             }).Wait();
 
             IsWebsiteSelected = NewCredential.Domain == "Site Web";
+
+            // Commande pour basculer la visibilité du mot de passe
             TogglePasswordCommand = new Command(TogglePassword);
+
+            // Initialisation de la visibilité du mot de passe à faux
             IsPasswordVisible = false;
+
+            // Commande pour sauvegarder le nouveau mot de passe
             SaveCommand = new Command(async () => await SaveNewCredential());
+
+            // Commande pour annuler l'ajout du mot de passe
             CancelCommand = new Command(async () => await CancelAddCredential());
-            
+
         }
 
+        // Méthode pour basculer la visibilité du mot de passe
         private void TogglePassword()
         {
             IsPasswordVisible = !IsPasswordVisible;
         }
 
-            private async Task SaveNewCredential()
+        // Méthode pour sauvegarder le nouveau mot de passe
+        private async Task SaveNewCredential()
+        {
+            try
             {
-                try
+                var error = await DaoCredentials.AddCredentialAsync(NewCredential);
+                if (string.IsNullOrEmpty(error))
                 {
-                   var error = await DaoCredentials.AddCredentialAsync(NewCredential);
-                   if (string.IsNullOrEmpty(error))
-                   {
-                        // Fermer la popup après une mise à jour réussie
-                        MessagingCenter.Send(this, "RefreshList");
-                        await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAsync();
-                   }
-                   else
-                   {
-                       // Afficher l'erreur retournée à l'utilisateur
-                       await Application.Current.MainPage.DisplayAlert("Erreur", $"Erreur durant l'ajout : {error}", "OK");
-                   }
+                    // Fermer la popup après une mise à jour réussie
+                    MessagingCenter.Send(this, "RefreshList");
+                    await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAsync();
                 }
-                catch (Exception ex)
+                else
                 {
-                    Debug.WriteLine($"Error saving new credential: {ex.Message}");
-                    await Application.Current.MainPage.DisplayAlert("Exception", $"Une exception s'est produite : {ex.Message}", "OK");
+                    // Afficher l'erreur retournée à l'utilisateur
+                    await Application.Current.MainPage.DisplayAlert("Erreur", $"Erreur durant l'ajout : {error}", "OK");
                 }
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error saving new credential: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Exception", $"Une exception s'est produite : {ex.Message}", "OK");
+            }
+        }
 
+        // Méthode pour annuler l'ajout du mot de passe
         private async Task CancelAddCredential()
         {
             await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAsync();
