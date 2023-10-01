@@ -18,5 +18,11 @@ namespace NT_GreenSecure.Views.Popup
             InitializeComponent();
             this.BindingContext = new AddPasswordViewModel();
         }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            MessagingCenter.Unsubscribe<CredentialDetailViewModel>(this, "RefreshList");
+        }
     }
 }

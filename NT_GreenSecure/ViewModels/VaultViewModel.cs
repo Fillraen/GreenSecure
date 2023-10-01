@@ -36,6 +36,43 @@ namespace NT_GreenSecure.ViewModels
             set => SetProperty(ref _isRefreshing, value);
         }
 
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (SetProperty(ref _searchText, value))
+                {
+                    // Appel à une méthode pour filtrer les résultats ici
+                    FilterCredentials();
+                }
+            }
+        }
+
+        private ObservableCollection<Credentials> _allCredentials;
+
+        public ObservableCollection<Credentials> AllCredentials
+        {
+            get => _allCredentials;
+            set => SetProperty(ref _allCredentials, value);
+        }
+
+        private string _selectedFilter;
+        public string SelectedFilter
+        {
+            get => _selectedFilter;
+            set => SetProperty(ref _selectedFilter, value);
+        }
+
+        private List<string> _filterOptions = new List<string> { "All", "Site Web", "Application" };
+        public List<string> FilterOptions => _filterOptions;
+        public ICommand FilterCommand => new Command<string>((filter) =>
+        {
+            SelectedFilter = filter;
+            FilterCredentials();
+        });
+
         public ICommand LoadDataCommand { get; }
         private int userId;
         private User connectedUser;
@@ -49,7 +86,7 @@ namespace NT_GreenSecure.ViewModels
             DeletePasswordCommand = new Command<int>(DeletePassword);
             OpenCredentialDetailCommand = new Command<Credentials>(OpenCredentialDetail);
             LoadDataCommand = new Command(async () => await LoadData());
-
+            SelectedFilter = "All"; // Initialize the selected filter
             Task.Run(async () =>
             {
                 try
@@ -74,16 +111,50 @@ namespace NT_GreenSecure.ViewModels
             
             MessagingCenter.Subscribe<CredentialDetailViewModel>(this, "RefreshList", async (sender) =>
             {
-                await LoadData();
+                Task.Run(async () =>
+                {
+                    await LoadData();
+                }).Wait();
             });
         }
 
         private async Task LoadData()
         {
             IsRefreshing = true;
-            await LoadCredentialsAsync(); // Supposer que c'est la méthode qui charge vos données.
+            await LoadCredentialsAsync(); // Charge toutes les données
+            FilterCredentials(); // Filtre les données en fonction de SearchText
             IsRefreshing = false;
         }
+
+
+        private void FilterCredentials()
+        {
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                // If the search text is empty, filter based on the selected filter
+                if (SelectedFilter == "All")
+                {
+                    Credentials = new ObservableCollection<Credentials>(AllCredentials);
+                }
+                else
+                {
+                    Credentials = new ObservableCollection<Credentials>(
+                        AllCredentials.Where(c => c.Domain == SelectedFilter)
+                    );
+                }
+            }
+            else
+            {
+                // Filter credentials based on the search text and selected filter
+                Credentials = new ObservableCollection<Credentials>(
+                    AllCredentials.Where(c =>
+                        (c.Name.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0) &&
+                        (SelectedFilter == "All" || c.Domain == SelectedFilter)
+                    )
+                );
+            }
+        }
+
 
         private async void OpenCredentialDetail(Credentials selectedCredential)
         {
@@ -99,8 +170,9 @@ namespace NT_GreenSecure.ViewModels
                 await App.Current.MainPage.DisplayAlert("Error", error, "OK");
                 return;
             }
-            Credentials = new ObservableCollection<Credentials>(credentialsList);
+            AllCredentials = new ObservableCollection<Credentials>(credentialsList);
         }
+
 
         public async void CopyPassword(int id)
         {

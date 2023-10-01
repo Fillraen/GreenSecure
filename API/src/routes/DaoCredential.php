@@ -77,7 +77,7 @@ return function (App $app) {
             $input = $request->getParsedBody();
             $idUser = $input['IdUser'];
             $username = $input['Username'];
-            $emailAddress = $input['Email'];
+            $emailAddress = $input['EmailAddress'];
             $url = $input['Url'];
             $name = $input['Name'];
             $encryptedPassword = $input['EncryptedPassword'];

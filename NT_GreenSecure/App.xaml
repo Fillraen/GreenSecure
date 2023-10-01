@@ -289,7 +289,7 @@
             <Style TargetType="Entry" x:Key="DetailPasswordEntry2">
                 <Setter Property="FontSize" Value="{StaticResource FontSizeMedium}"/>
                 <Setter Property="TextColor" Value="{StaticResource TextColor}"/>
-                <Setter Property="PlaceholderColor" Value="{StaticResource TextColor}" />
+                <Setter Property="PlaceholderColor" Value="{StaticResource LightPrimary}" />
                 <Setter Property="FontFamily" Value="Roboto-Bold.ttf#Roboto" />
                 <Setter Property="Margin" Value="0,0,0,0"/>
             </Style>

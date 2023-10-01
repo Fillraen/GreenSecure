@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -15,6 +16,7 @@ namespace NT_GreenSecure.ViewModels.Popup
         public Credentials SelectedCredential { get; set; }
 
         public ICommand SaveCommand { get; set; }
+        public ICommand DeleteCommand { get; set; }
         public ICommand TogglePasswordCommand { get; set; }
 
         private int userId;
@@ -68,8 +70,6 @@ namespace NT_GreenSecure.ViewModels.Popup
 
             }
         }
-
-
         // Propriété pour la force du mot de passe
         public string PasswordStrength
         {
@@ -119,6 +119,7 @@ namespace NT_GreenSecure.ViewModels.Popup
             IsWebsiteSelected = SelectedCredential.Domain == "Site Web";
             TogglePasswordCommand = new Command(TogglePassword);
             SaveCommand = new Command(async () => await SaveCredential());
+            DeleteCommand = new Command(async () => await DeleteCredentials());
             IsPasswordVisible = false; // Par défaut, le mot de passe est caché
             DecryptedPassword = selectedCredential.GetActualPassword(connectedUser.EncryptionKey, connectedUser.EncryptionIV);
         }
@@ -154,5 +155,32 @@ namespace NT_GreenSecure.ViewModels.Popup
             }
         }
 
+        private async Task DeleteCredentials()
+        {
+            try
+            {
+                var userResponse = await App.Current.MainPage.DisplayAlert("Confirmation", "Êtes-vous sûr de vouloir supprimer ceci?", "Oui", "Non");
+                if (userResponse)
+                {
+                    var message = await DaoCredentials.DeleteCredentialAsync(SelectedCredential.Id);
+                    if (message != "ok")
+                    {
+                        await App.Current.MainPage.DisplayAlert("Erreur", message, "OK");
+                        return;
+                    }
+                    else
+                    {
+                        MessagingCenter.Send(this, "RefreshList");
+                        await Rg.Plugins.Popup.Services.PopupNavigation.Instance.PopAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error deleting credential: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Exception", $"Une exception s'est produite : {ex.Message}", "OK");
+            }
+            
+        }
     }
 }
