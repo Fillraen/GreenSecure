@@ -22,6 +22,7 @@ namespace NT_GreenSecure.Views
         {
             base.OnDisappearing();
             MessagingCenter.Unsubscribe<CredentialDetailViewModel>(this, "RefreshList");
+            MessagingCenter.Unsubscribe<AddPasswordViewModel>(this, "RefreshList");
         }
     }
 }

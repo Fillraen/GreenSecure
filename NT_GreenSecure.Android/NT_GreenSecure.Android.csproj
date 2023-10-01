@@ -191,7 +191,9 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_search.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\green_lock.png" />
+  </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\BottomTabLayout.xml" />
   </ItemGroup>
@@ -201,10 +203,13 @@
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Toolbar.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\purple_lock.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties XamarinHotReloadGenericExceptionInfoBarNT_GreenSecureAndroidHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionNT_GreenSecureAndroidHideInfoBar="True" />
+      <UserProperties XamarinHotReloadDebuggerTimeoutExceptionNT_GreenSecureAndroidHideInfoBar="True" XamarinHotReloadGenericExceptionInfoBarNT_GreenSecureAndroidHideInfoBar="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

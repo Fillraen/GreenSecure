@@ -12,6 +12,7 @@ namespace NT_GreenSecure
         public App()
         {
             InitializeComponent();
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjczNDI3MUAzMjMzMmUzMDJlMzBTdXVxQ3FxTnEyM3VPTlhpSTdEZ0tKRm9EdGxJQVNZSGhNUFVVcTJPZ2FnPQ==");
             DependencyService.Register<DAO_Credentials>();
             DependencyService.Register<DAO_Users>();
             MainPage = new AppShell();

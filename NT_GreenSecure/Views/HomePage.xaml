@@ -2,19 +2,125 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:NT_GreenSecure.ViewModels"
+             xmlns:progressBar="clr-namespace:Syncfusion.XForms.ProgressBar;assembly=Syncfusion.SfProgressBar.XForms"
+             xmlns:models="clr-namespace:NT_GreenSecure.Models;assembly=NT_GreenSecure"
              x:Class="NT_GreenSecure.Views.HomePage"
              Shell.NavBarIsVisible="False"
+             x:Name="HomePageName"
              Shell.TabBarIsVisible="True"
              >
+
+    <ContentPage.BindingContext>
+        <vm:HomeViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.Content>
-        <Grid>
+        <Grid Margin="0" Padding="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
-   
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Text="Welcome to Green Secure" TextColor="Black" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" Grid.Row="0"></Label>
-            <Image Source="./home_bg.png" Grid.Row="1" Aspect="AspectFill"></Image>
+            <Image Source="bg_top_home.png" Grid.Row="0" Aspect="Fill" Margin="0" />
+            <StackLayout Grid.Row="0">
+                <StackLayout Grid.Row="0" Orientation="Horizontal" VerticalOptions="Start" HorizontalOptions="Start" Margin="10,10,0,0">
+                    <Image Source="greensecure_logo.png" HeightRequest="64" WidthRequest="64" ></Image>
+                    <StackLayout Orientation="Vertical" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Margin="0,0,0,-5" TextColor="White" FontSize="{StaticResource FontSizeMedium}" FontFamily="Roboto-Light.ttf#Roboto">Welcome Back !</Label>
+                        <Label Text="{Binding connectedUser.Username, Mode=TwoWay}" Margin="0,-5,0,0" TextColor="White" FontSize="{StaticResource FontSizeLarge}" FontFamily="Roboto-Bold.ttf#Roboto" />
+                    </StackLayout>
+                </StackLayout>
+                <progressBar:SfCircularProgressBar x:Name="CustomContentCircularProgressBar" Progress="{Binding AverageComplexity, Mode=TwoWay}" StartAngle="180" EndAngle="360" ProgressColor="#BCFBBA" HorizontalOptions="Center" HeightRequest="250" WidthRequest="250">
+                    <progressBar:SfCircularProgressBar.Content>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Label x:Name="CustomContentProgressBarLabel" Grid.Row="0"
+                                   TextColor="#BCFBBA" Text="{Binding Progress,StringFormat='{0}'}" BindingContext="{x:Reference CustomContentCircularProgressBar}"  HorizontalTextAlignment="Center" VerticalTextAlignment="Start" FontSize="{StaticResource FontSizeExtraLarge}" FontFamily="Roboto-Bold.ttf#Roboto">
+                            </Label>
+                            <Label Grid.Row="1" TextColor="#D1E7DD" Text="Health Score" VerticalOptions="Start" Margin="0,-15,0,0" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" FontSize="{StaticResource FontSizeMedium}"/>
+                        </Grid>
+                    </progressBar:SfCircularProgressBar.Content>
+                </progressBar:SfCircularProgressBar>
+            </StackLayout>
+            <Grid Grid.Row="1" Margin="0,-70,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Frame Grid.Column="0" Margin="10" Padding="10" CornerRadius="10" BackgroundColor="#ffffff">
+                    <StackLayout Orientation="Horizontal">
+                        <Image Source="green_lock.png" HeightRequest="48" WidthRequest="48"  />
+                        <StackLayout HorizontalOptions="Start" VerticalOptions="Center">
+                            <Label Text="{Binding TotalPassword, Mode=TwoWay}" TextColor="{StaticResource TextColor}" Margin="0,0,0,-7" FontSize="{StaticResource FontSizeLarge}" FontFamily="Roboto-Bold.ttf#Roboto" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                            <Label Text="Total" TextColor="{StaticResource LightPrimary}" Margin="0,-7,0,0" FontSize="{StaticResource FontSizeMedium}" FontFamily="Roboto-Regular.ttf#Roboto" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Column="1" Margin="10" Padding="10" CornerRadius="10" BackgroundColor="#ffffff">
+                    <StackLayout Orientation="Horizontal">
+                        <Image Source="purple_lock.png" HeightRequest="48" WidthRequest="48"  />
+                        <StackLayout HorizontalOptions="Start" VerticalOptions="Center">
+                            <Label Text="{Binding ReusedPassword, Mode=TwoWay}" TextColor="{StaticResource TextColor}" Margin="0,0,0,-7" FontSize="{StaticResource FontSizeLarge}" FontFamily="Roboto-Bold.ttf#Roboto" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                            <Label Text="Reused" TextColor="{StaticResource LightPrimary}" Margin="0,-7,0,0" FontSize="{StaticResource FontSizeMedium}" FontFamily="Roboto-Regular.ttf#Roboto" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+            </Grid>
+ 
+            <Frame Grid.Row="2" BackgroundColor="Transparent" Margin="0" Padding="20,10,20,5">
+                
+                <StackLayout>
+                    <Label Style="{StaticResource VaultTitle}" TextColor="{StaticResource TextColor}" Text="Recent Password" FontSize="{StaticResource FontSizeLarge}" />
+                    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding LoadDataCommand}">
+                        <CollectionView ItemsSource="{Binding NewCredentials}" SelectionMode="None" >
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackLayout BackgroundColor="Transparent">
+                                        <Frame Style="{StaticResource CollectionItemPasswordVault}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <StackLayout Grid.Column="0" Orientation="Horizontal">
+                                                    <StackLayout.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding Source={x:Reference HomePageName}, Path=BindingContext.OpenCredentialDetailCommand}" CommandParameter="{Binding .}"/>
+                                                    </StackLayout.GestureRecognizers>
+                                                    <Frame  Style="{StaticResource CollectionIconPasswordFrameVault}">
+                                                        <Image Source="{Binding urlIcon}" AbsoluteLayout.LayoutBounds="0,0,1,1" BackgroundColor="{StaticResource MainBackGround}"   AbsoluteLayout.LayoutFlags="All" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Style="{StaticResource CollectionIconPasswordIconVault}"/>
+                                                    </Frame>
+                                                    <StackLayout x:DataType="models:Credentials" Style="{StaticResource CollectionGroupDataVault}">
+                                                        <Label Text="{Binding Name}" Style="{StaticResource CollectionMainDataVault}"/>
+                                                        <Label Text="{Binding EmailAddress}" Style="{StaticResource CollectionSecondDataVault}"/>
+                                                    </StackLayout>
+                                                </StackLayout>
+                                                <StackLayout Grid.Column="1" Style="{StaticResource CollectionGroupActionBtn}" >
+                                                    <Image Source="icon_copy" Style="{StaticResource CollectionFirstActionBtn}">
+                                                        <Image.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding Source={x:Reference HomePageName}, Path=BindingContext.CopyPasswordCommand}" CommandParameter="{Binding Id}"/>
+                                                        </Image.GestureRecognizers>
+                                                    </Image>
+                                                    <Image Source="icon_delete_password">
+                                                        <Image.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding Source={x:Reference Name=HomePageName}, Path=BindingContext.DeletePasswordCommand}" CommandParameter="{Binding Id}"/>
+                                                        </Image.GestureRecognizers>
+                                                    </Image>
+                                                </StackLayout>
+                                            </Grid>
+                                        </Frame>
+                                    </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </RefreshView>
+                </StackLayout>
+
+            </Frame>
 
         </Grid>
     </ContentPage.Content>
