@@ -17,7 +17,7 @@ namespace NT_GreenSecure.Services
 {
     public class DAO_Credentials : IDao_Credentials<Credentials>
     {
-        private readonly string baseUrl = "http://10.0.2.2:8089/credentials"; // URL de base pour les opérations CRUD sur les credentials
+        private readonly string baseUrl = "http://nicolas-trehou.alwaysdata.net/credentials"; // URL de base pour les opérations CRUD sur les credentials
         private readonly HttpClient _client; 
         private int userId; 
 

@@ -14,7 +14,7 @@ namespace NT_GreenSecure.Services
 {
     public class DAO_Users : IDao_Users<User>
     {
-        private readonly string baseUrl = "http://10.0.2.2:8089/users"; // URL de base pour les opérations CRUD sur les utilisateurs
+        private readonly string baseUrl = "http://nicolas-trehou.alwaysdata.net/users"; // URL de base pour les opérations CRUD sur les utilisateurs
         private readonly HttpClient _client;
 
         public DAO_Users()
