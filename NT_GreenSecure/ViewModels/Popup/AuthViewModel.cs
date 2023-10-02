@@ -43,8 +43,8 @@ namespace NT_GreenSecure.ViewModels.Popup
                 // Demander à fermer le popup en invoquant l'événement
                 RequestClosePopup?.Invoke();
 
-                // Naviguer vers la page VaultPage si l'authentification est réussie
-                await Shell.Current.GoToAsync($"//{nameof(VaultPage)}");
+                // Push the VaultPage onto the navigation stack while preserving the tab bar
+                await Shell.Current.Navigation.PushAsync(new VaultPage());
             }
             else
             {
@@ -52,5 +52,6 @@ namespace NT_GreenSecure.ViewModels.Popup
                 await App.Current.MainPage.DisplayAlert("Erreur", "Email ou mot de passe incorrect", "OK");
             }
         }
+
     }
 }

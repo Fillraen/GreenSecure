@@ -1,4 +1,5 @@
-﻿using NT_GreenSecure.Services;
+﻿using NT_GreenSecure.Models;
+using NT_GreenSecure.Services;
 using NT_GreenSecure.Views;
 using System;
 using Xamarin.Essentials;
@@ -15,43 +16,42 @@ namespace NT_GreenSecure
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjczNDI3MUAzMjMzMmUzMDJlMzBTdXVxQ3FxTnEyM3VPTlhpSTdEZ0tKRm9EdGxJQVNZSGhNUFVVcTJPZ2FnPQ==");
             DependencyService.Register<DAO_Credentials>();
             DependencyService.Register<DAO_Users>();
-            MainPage = new AppShell();
-            // Preferences.Set("token_expiry", DateTime.UtcNow.AddHours(48).Ticks);
-            // Récupération de l'IdUser et de la date d'expiration du token
-            int userId = Preferences.Get("IdUser", -1);
-            long ticks = Preferences.Get("token_expiry", 0L);
-
-            DateTime tokenExpiry = new DateTime(ticks);
-
-            if (userId != -1)
-            {
-                if (DateTime.UtcNow < tokenExpiry)
-                {
-                    // Vérification supplémentaire pour voir si l'utilisateur est toujours valide, si nécessaire
-
-                    Shell.Current.GoToAsync("//HomePage");
-
-                }
-                else
-                {
-                    Preferences.Remove("token_expiry");
-                    App.Current.MainPage.DisplayAlert("Session expirée", "Veuillez vous reconnecter", "OK");
-
-                  
-                    Shell.Current.GoToAsync("//LoginPage");
-                }
-            }
-            else
-            {
-                Shell.Current.GoToAsync("//LoginPage");
-
-            }
+            MainPage = new AppShell(); // Set the main page
         }
-
 
         protected override void OnStart()
         {
+            if (MainPage is Shell shellPage)
+            {
+                int userId = Preferences.Get("IdUser", -1);
+                long ticks = Preferences.Get("token_expiry", 0L);
+                DateTime tokenExpiry = new DateTime(ticks);
+                bool IsTokenExpired = DateTime.UtcNow >= tokenExpiry;
+
+                if (userId != -1)
+                {
+                    if (IsTokenExpired)
+                    {
+                        Preferences.Remove("token_expiry");
+                        Preferences.Set("IdUser", -1);
+                        App.Current.MainPage.DisplayAlert("Session expirée", "Veuillez vous reconnecter", "OK").ContinueWith(t =>
+                        {
+                            if (t.IsCompleted)
+                                shellPage.GoToAsync($"//{nameof(LoginPage)}");
+                        });
+                    }
+                    else
+                    {
+                        shellPage.GoToAsync($"//{nameof(HomePage)}");
+                    }
+                }
+                else
+                {
+                    shellPage.GoToAsync($"//{nameof(LoginPage)}");
+                }
+            }
         }
+
 
         protected override void OnSleep()
         {

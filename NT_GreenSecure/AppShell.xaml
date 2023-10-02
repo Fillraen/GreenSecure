@@ -51,31 +51,4 @@
             <ShellContent ContentTemplate="{DataTemplate local:LoginPage}" />
         </Tab>
     </controls:TodoTabBar>
-
-    <!--
-    <TabBar>
-    
-        <ShellContent Title="Home" Icon="icon_home.png" Route="HomePage" ContentTemplate="{DataTemplate local:HomePage}" />
-        <ShellContent Title="Vault" Icon="icon_vault.png" Route="VaultPage" ContentTemplate="{DataTemplate local:VaultPage}" />
-        <ShellContent Title="Add" Icon="icon_add_password.png"/>
-        <ShellContent Title="Tools" Icon="icon_settings.png" Route="SettingsPage" ContentTemplate="{DataTemplate local:SettingsPage}" />
-        <ShellContent Title="Login" Icon="icon_lock_green.png" Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
-    
-    </TabBar>
-    -->
-
-    <!--
-        If you would like to navigate to this content you can do so by calling
-        await Shell.Current.GoToAsync("//LoginPage");
-    -->
-    
-    <!--
-    <TabBar>
-        <ShellContent Route="LoginPage" ContentTemplate="{DataTemplate local:LoginPage}" />
-        <ShellContent Route="SettingPage" ContentTemplate="{DataTemplate local:SettingsPage}" />
-        <ShellContent Route="VaultPage" ContentTemplate="{DataTemplate local:VaultPage}" />
-        <ShellContent Route="HomePage" ContentTemplate="{DataTemplate local:HomePage}" />
-    </TabBar>
-    -->
-
 </Shell>

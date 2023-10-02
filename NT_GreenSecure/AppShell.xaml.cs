@@ -2,6 +2,7 @@
 using NT_GreenSecure.Views;
 using System;
 using System.Collections.Generic;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace NT_GreenSecure
@@ -11,13 +12,11 @@ namespace NT_GreenSecure
         public AppShell()
         {
             InitializeComponent();
-
             Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
             Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
             Routing.RegisterRoute(nameof(VaultPage), typeof(VaultPage));
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
 
-            
         }
     }
 }
